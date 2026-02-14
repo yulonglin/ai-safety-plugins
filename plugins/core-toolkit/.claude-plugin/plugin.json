@@ -58,6 +58,12 @@
         ]
       }
     ],
+    "SessionStart": [
+      {
+        "type": "command",
+        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check_git_root.sh"
+      }
+    ],
     "PostToolUse": [
       {
         "matcher": "Bash",
