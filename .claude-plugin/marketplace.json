@@ -3,11 +3,11 @@
   "name": "ai-safety-plugins",
   "description": "Claude Code plugins for AI safety research: experiment design, academic writing, code review, workflow management, and visualization",
   "owner": { "name": "Yulong Lin" },
-  "metadata": { "version": "1.0.0", "pluginRoot": "./plugins" },
+  "metadata": { "version": "1.0.0" },
   "plugins": [
     {
       "name": "core-toolkit",
-      "source": "core-toolkit",
+      "source": "./plugins/core-toolkit",
       "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Codex/Gemini), spec interviews, and docs search",
       "version": "1.0.0",
       "category": "core",
@@ -16,7 +16,7 @@
     },
     {
       "name": "research-toolkit",
-      "source": "research-toolkit",
+      "source": "./plugins/research-toolkit",
       "description": "AI safety research workflows: experiment design, execution, analysis, and literature review",
       "version": "1.0.0",
       "category": "research",
@@ -25,7 +25,7 @@
     },
     {
       "name": "writing-toolkit",
-      "source": "writing-toolkit",
+      "source": "./plugins/writing-toolkit",
       "description": "Academic writing: papers, drafts, presentations, and multi-critic review",
       "version": "1.0.0",
       "category": "writing",
@@ -34,7 +34,7 @@
     },
     {
       "name": "code-toolkit",
-      "source": "code-toolkit",
+      "source": "./plugins/code-toolkit",
       "description": "Code review, debugging, performance optimization, bulk editing, and CLI delegation",
       "version": "1.0.0",
       "category": "development",
@@ -43,7 +43,7 @@
     },
     {
       "name": "workflow-toolkit",
-      "source": "workflow-toolkit",
+      "source": "./plugins/workflow-toolkit",
       "description": "Agent teams, handover, conversation management, and usage analytics",
       "version": "1.0.0",
       "category": "workflow",
@@ -52,7 +52,7 @@
     },
     {
       "name": "viz-toolkit",
-      "source": "viz-toolkit",
+      "source": "./plugins/viz-toolkit",
       "description": "TikZ diagrams and Anthropic-style visualization",
       "version": "1.0.0",
       "category": "visualization",
