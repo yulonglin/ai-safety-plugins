@@ -1,5 +1,5 @@
 ---
-name: insights
+name: custom-insights
 description: |
   Generate Claude Code usage insights reports. Analyzes session transcripts,
   extracts structured facets via Gemini CLI, and produces coaching-style HTML reports
@@ -27,17 +27,17 @@ Generate personalized coaching reports from your Claude Code session history.
 ## Usage
 
 ```
-/insights                          # Full pipeline: extract new sessions + generate report
-/insights --report-only            # Regenerate report from cached facets (fast)
-/insights --project dotfiles       # Filter to a specific project
-/insights --list-projects          # Show all projects with session counts
-/insights --since 7                # Last 7 days only
-/insights --dry-run                # Preview what would be processed
+/custom-insights                          # Full pipeline: extract new sessions + generate report
+/custom-insights --report-only            # Regenerate report from cached facets (fast)
+/custom-insights --project dotfiles       # Filter to a specific project
+/custom-insights --list-projects          # Show all projects with session counts
+/custom-insights --since 7                # Last 7 days only
+/custom-insights --dry-run                # Preview what would be processed
 ```
 
 ## Execution
 
-When the user invokes `/insights`, run the appropriate command based on arguments:
+When the user invokes `/custom-insights`, run the appropriate command based on arguments:
 
 ### Default (no args or `--report-only`)
 
