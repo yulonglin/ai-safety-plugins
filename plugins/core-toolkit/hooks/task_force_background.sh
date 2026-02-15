@@ -37,10 +37,10 @@ fi
 
 # --- Force background ---
 
-jq -n '{
+echo "$INPUT" | jq '{
   hookSpecificOutput: {
     hookEventName: "PreToolUse",
-    updatedInput: { run_in_background: true },
+    updatedInput: (.tool_input + { run_in_background: true }),
     additionalContext: "Task auto-backgrounded to avoid raw JSONL dumps (#16789). Wait for <task-notification> with <result> tag. Do NOT poll with TaskOutput tool — results arrive automatically."
   }
 }'
