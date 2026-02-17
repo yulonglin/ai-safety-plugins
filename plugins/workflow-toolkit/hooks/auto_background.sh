@@ -15,8 +15,6 @@
 # Exit codes:
 #   0 - Allow (with optional JSON output on stdout)
 
-set -euo pipefail
-
 # --- Early exits ---
 
 # Disabled?
@@ -24,33 +22,40 @@ set -euo pipefail
 
 # jq required for JSON parsing/output
 if ! command -v jq &>/dev/null; then
-  echo "auto_background: jq not found, skipping" >&2
+  printf 'auto_background: jq not found, skipping\n' >&2
   exit 0
 fi
 
 INPUT=$(cat)
-COMMAND=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
+
+# Validate JSON input
+if ! printf '%s' "$INPUT" | jq -e '.' &>/dev/null; then
+  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: invalid JSON input, skip\n' >&2
+  exit 0
+fi
+
+COMMAND=$(printf '%s' "$INPUT" | jq -r '.tool_input.command // ""')
 
 # Empty command
 [[ -z "$COMMAND" ]] && exit 0
 
 # Already backgrounded
-if echo "$INPUT" | jq -e '.tool_input.run_in_background == true' &>/dev/null; then
-  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: already backgrounded, skip" >&2
+if printf '%s' "$INPUT" | jq -e '.tool_input.run_in_background == true' &>/dev/null; then
+  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: already backgrounded, skip\n' >&2
   exit 0
 fi
 
 # Explicit short timeout (≤30s = 30000ms) — caller expects fast execution
-TIMEOUT=$(echo "$INPUT" | jq -r '.tool_input.timeout // 0')
-if [[ "$TIMEOUT" -gt 0 && "$TIMEOUT" -le 30000 ]] 2>/dev/null; then
-  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: short timeout ($TIMEOUT ms), skip" >&2
+TIMEOUT=$(printf '%s' "$INPUT" | jq -r '.tool_input.timeout // 0')
+if [[ "$TIMEOUT" =~ ^[0-9]+$ ]] && [[ "$TIMEOUT" -gt 0 && "$TIMEOUT" -le 30000 ]]; then
+  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: short timeout (%s ms), skip\n' "$TIMEOUT" >&2
   exit 0
 fi
 
 # --- Exclusion check (bash case — zero subprocess cost) ---
 case "$COMMAND" in
   *--version*|*--help*|*--dry-run*|*" -h"*|*" -V"*)
-    [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: excluded (flag)" >&2
+    [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: excluded (flag)\n' >&2
     exit 0 ;;
   *"pip list"*|*"pip show"*|*"pip freeze"*)
     exit 0 ;;
@@ -100,14 +105,14 @@ fi
 
 MODE="${CLAUDE_AUTOBACKGROUND_MODE:-force}"
 
-if echo "$COMMAND" | grep -qE "$TIER1_RE"; then
-  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: Tier 1 match → $MODE" >&2
+if printf '%s' "$COMMAND" | grep -qE "$TIER1_RE"; then
+  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: Tier 1 match → %s\n' "$MODE" >&2
 
   if [[ "$MODE" == "force" ]]; then
-    echo "$INPUT" | jq '{
+    printf '%s' "$INPUT" | jq '{
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
-        updatedInput: (.tool_input + { run_in_background: true }),
+        updatedInput: ((.tool_input // {}) + { run_in_background: true }),
         additionalContext: "Auto-backgrounded: long-running command detected. Use TaskOutput to check results. To override: re-run with run_in_background: false."
       }
     }'
@@ -131,8 +136,8 @@ TIER2_RE="$TIER2_RE"'|\b(rsync|scp)\b'
 TIER2_RE="$TIER2_RE"'|\bmake\b'
 TIER2_RE="$TIER2_RE"'|\btsc(\s|$)'
 
-if echo "$COMMAND" | grep -qE "$TIER2_RE"; then
-  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: Tier 2 match → suggest" >&2
+if printf '%s' "$COMMAND" | grep -qE "$TIER2_RE"; then
+  [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: Tier 2 match → suggest\n' >&2
 
   jq -n '{
     hookSpecificOutput: {
@@ -143,5 +148,5 @@ if echo "$COMMAND" | grep -qE "$TIER2_RE"; then
   exit 0
 fi
 
-[[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: no match" >&2
+[[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && printf 'auto_background: no match\n' >&2
 exit 0
