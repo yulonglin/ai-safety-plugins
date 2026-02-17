@@ -1,5 +1,5 @@
 {
-  "name": "viz-toolkit",
+  "name": "viz",
   "description": "Matplotlib plotting, TikZ diagrams, and Anthropic-style visualization.",
   "version": "1.0.0",
   "author": {

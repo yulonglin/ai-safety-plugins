@@ -1,5 +1,5 @@
 {
-  "name": "core-toolkit",
+  "name": "core",
   "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Codex/Gemini), spec interviews, docs search, and safety hooks.",
   "version": "1.0.0",
   "author": { "name": "Yulong Lin" },
@@ -72,11 +72,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check_git_root.sh"
+            "command": "claude-tools check-git-root"
           },
           {
             "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/context_auto_apply.sh"
+            "command": "claude-tools context-apply"
           }
         ]
       }

@@ -6,8 +6,8 @@
   "metadata": { "version": "1.0.0" },
   "plugins": [
     {
-      "name": "core-toolkit",
-      "source": "./plugins/core-toolkit",
+      "name": "core",
+      "source": "./plugins/core",
       "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Codex/Gemini), spec interviews, and docs search",
       "version": "1.0.0",
       "category": "core",
@@ -15,8 +15,8 @@
       "license": "MIT"
     },
     {
-      "name": "research-toolkit",
-      "source": "./plugins/research-toolkit",
+      "name": "research",
+      "source": "./plugins/research",
       "description": "AI safety research workflows: experiment design, execution, analysis, and literature review",
       "version": "1.0.0",
       "category": "research",
@@ -24,8 +24,8 @@
       "license": "MIT"
     },
     {
-      "name": "writing-toolkit",
-      "source": "./plugins/writing-toolkit",
+      "name": "writing",
+      "source": "./plugins/writing",
       "description": "Academic writing: papers, drafts, presentations, and multi-critic review",
       "version": "1.0.0",
       "category": "writing",
@@ -33,8 +33,8 @@
       "license": "MIT"
     },
     {
-      "name": "code-toolkit",
-      "source": "./plugins/code-toolkit",
+      "name": "code",
+      "source": "./plugins/code",
       "description": "Code review, debugging, performance optimization, bulk editing, and CLI delegation",
       "version": "1.0.0",
       "category": "development",
@@ -42,8 +42,8 @@
       "license": "MIT"
     },
     {
-      "name": "workflow-toolkit",
-      "source": "./plugins/workflow-toolkit",
+      "name": "workflow",
+      "source": "./plugins/workflow",
       "description": "Agent teams, handover, conversation management, and usage analytics",
       "version": "1.0.0",
       "category": "workflow",
@@ -51,8 +51,8 @@
       "license": "MIT"
     },
     {
-      "name": "viz-toolkit",
-      "source": "./plugins/viz-toolkit",
+      "name": "viz",
+      "source": "./plugins/viz",
       "description": "TikZ diagrams and Anthropic-style visualization",
       "version": "1.0.0",
       "category": "visualization",

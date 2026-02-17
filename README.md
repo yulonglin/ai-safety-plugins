@@ -9,19 +9,19 @@ Claude Code plugins for AI safety research: experiment design, academic writing,
 /plugin marketplace add yulonglin/ai-safety-plugins
 
 # Install core (recommended for everyone)
-/plugin install core-toolkit@ai-safety-plugins
+/plugin install core@ai-safety-plugins
 
 # Install domain-specific plugins
-/plugin install research-toolkit@ai-safety-plugins
-/plugin install code-toolkit@ai-safety-plugins
-/plugin install writing-toolkit@ai-safety-plugins
-/plugin install workflow-toolkit@ai-safety-plugins
-/plugin install viz-toolkit@ai-safety-plugins
+/plugin install research@ai-safety-plugins
+/plugin install code@ai-safety-plugins
+/plugin install writing@ai-safety-plugins
+/plugin install workflow@ai-safety-plugins
+/plugin install viz@ai-safety-plugins
 ```
 
 ## Plugins
 
-### core-toolkit (recommended: always-on)
+### core (recommended: always-on)
 
 Foundational agents and skills that other plugins depend on.
 
@@ -52,7 +52,7 @@ Foundational agents and skills that other plugins depend on.
 | `pre_plan_create` | PreToolUse:Write | Enforces per-project plans |
 | `pre_task_create` | PreToolUse:TaskCreate | Enforces per-project tasks |
 
-### research-toolkit
+### research
 
 AI safety research workflows.
 
@@ -60,7 +60,7 @@ AI safety research workflows.
 
 **Skills:** `/spec-interview-research`, `/experiment-setup`, `/run-experiment`, `/api-experiments`, `/read-paper`, `/reproducibility-report`, `/generate-research-spec`, `/mats-slurm`
 
-### writing-toolkit
+### writing
 
 Academic writing and presentations.
 
@@ -68,7 +68,7 @@ Academic writing and presentations.
 
 **Skills:** `/review-draft`, `/review-paper`, `/research-presentation`, `/slidev`, `/fix-slide`, `/clear-writing`, `/humanize-draft`, `/strategic-communication`
 
-### code-toolkit
+### code
 
 Development workflow, code review, and delegation.
 
@@ -76,9 +76,9 @@ Development workflow, code review, and delegation.
 
 **Skills:** `/codex-cli`, `/claude-code`, `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
 
-**Depends on:** `core-toolkit` (codex and gemini-cli agents)
+**Depends on:** `core` (codex and gemini-cli agents)
 
-### workflow-toolkit
+### workflow
 
 Agent orchestration and conversation management.
 
@@ -91,9 +91,9 @@ Agent orchestration and conversation management.
 | `check_pipe_buffering` | PreToolUse:Bash | Warns about piping anti-patterns | Warn only |
 | `auto_log` | Pre/PostToolUse:Bash | Audit trail of commands | Async, non-blocking |
 
-**Depends on:** `core-toolkit` (context-summariser, gemini-cli agents)
+**Depends on:** `core` (context-summariser, gemini-cli agents)
 
-### viz-toolkit
+### viz
 
 TikZ diagrams and Anthropic-style visualization.
 
@@ -124,7 +124,7 @@ TikZ diagrams and Anthropic-style visualization.
 ```bash
 # macOS
 brew install codex gemini-cli fd ripgrep
-brew install --cask mactex  # Only for viz-toolkit / presentations
+brew install --cask mactex  # Only for viz / presentations
 
 # Auth
 codex auth           # OpenAI key (for Codex delegation)
@@ -138,7 +138,7 @@ Add to your Claude Code settings (`~/.claude/settings.json`):
 ```json
 {
   "enabledPlugins": {
-    "core-toolkit@ai-safety-plugins": true
+    "core@ai-safety-plugins": true
   }
 }
 ```
