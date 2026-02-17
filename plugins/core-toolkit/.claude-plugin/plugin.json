@@ -31,15 +31,6 @@
         ]
       },
       {
-        "matcher": "Task",
-        "hooks": [
-          {
-            "type": "command",
-            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/task_force_background.sh"
-          }
-        ]
-      },
-      {
         "matcher": "Write",
         "hooks": [
           {
@@ -60,8 +51,12 @@
     ],
     "SessionStart": [
       {
-        "type": "command",
-        "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check_git_root.sh"
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check_git_root.sh"
+          }
+        ]
       }
     ],
     "PostToolUse": [

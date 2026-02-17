@@ -104,10 +104,10 @@ if echo "$COMMAND" | grep -qE "$TIER1_RE"; then
   [[ "${CLAUDE_AUTOBACKGROUND_DEBUG:-0}" == "1" ]] && echo "auto_background: Tier 1 match → $MODE" >&2
 
   if [[ "$MODE" == "force" ]]; then
-    jq -n '{
+    echo "$INPUT" | jq '{
       hookSpecificOutput: {
         hookEventName: "PreToolUse",
-        updatedInput: { run_in_background: true },
+        updatedInput: (.tool_input + { run_in_background: true }),
         additionalContext: "Auto-backgrounded: long-running command detected. Use TaskOutput to check results. To override: re-run with run_in_background: false."
       }
     }'
