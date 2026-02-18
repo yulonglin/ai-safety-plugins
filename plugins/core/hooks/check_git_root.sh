@@ -2,8 +2,13 @@
 # SessionStart hook: warn if CWD is not a git root
 # Catches IDE integrations and direct `command claude` that bypass the wrapper
 
+# Fast path: use Rust binary if available
+claude-tools check-git-root 2>/dev/null && exit 0
+
+# Shell fallback
 git_root=$(git rev-parse --show-toplevel 2>/dev/null)
-if [[ -n "$git_root" && "$PWD" != "$git_root" ]]; then
+physical_cwd=$(realpath "$PWD" 2>/dev/null || pwd -P)
+if [[ -n "$git_root" && "$physical_cwd" != "$git_root" ]]; then
     echo "WARNING: CWD ($PWD) is not the git root ($git_root)"
     echo "Plans will be created in the wrong location."
     echo "Consider: cd $git_root"

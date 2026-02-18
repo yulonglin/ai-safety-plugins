@@ -72,11 +72,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "claude-tools check-git-root"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/check_git_root.sh"
           },
           {
             "type": "command",
-            "command": "claude-tools context-apply"
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/context_auto_apply.sh"
           }
         ]
       }
