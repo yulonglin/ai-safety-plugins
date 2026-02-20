@@ -1,6 +1,6 @@
 ---
 name: research-engineer
-description: MUST BE USED for implementing research experiments and evaluation pipelines. Use PROACTIVELY when implementing experiment runners, data processing, statistical analysis, or async LLM API calls. Automatically invoke for experiment code requiring full reproducibility (JSONL output, CLI args, proper logging, random seeds, checkpointing). Specializes in CLAUDE.md-compliant research code with async patterns, intelligent caching, performance optimization, and proper error handling.
+description: MUST BE USED for implementing research experiments and evaluation pipelines. Use PROACTIVELY when implementing experiment runners, data processing, statistical analysis, or async LLM API calls. Automatically invoke for experiment code requiring full reproducibility (JSONL output, CLI args, proper logging, random seeds, checkpointing). Research code: CLI args (not hardcoded), JSONL output, proper logging, random seeds, checkpointing. Specializes in async patterns, intelligent caching, performance optimization, and proper error handling.
 model: inherit
 tools: Read,Write,Edit,Bash
 ---

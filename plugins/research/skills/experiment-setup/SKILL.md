@@ -19,7 +19,7 @@ Set up automated experiment logging using Hydra and Inspect AI.
 - ✅ Inspect AI integration
 
 ## Instructions
-1. **Read the Guide**: `~/.claude/skills/experiment-setup/GUIDE.md`
+1. **Read the Guide**: `GUIDE.md`
    This file contains detailed implementation steps, directory structure, and troubleshooting.
 
 2. **Execute Steps**:

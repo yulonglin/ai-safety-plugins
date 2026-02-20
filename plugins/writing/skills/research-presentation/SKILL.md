@@ -21,7 +21,7 @@ Guide for communicating research results - both slides/presentations and publica
 
 ## Reference Files
 
-- **`~/.claude/skills/research-presentation/GUIDE.md`** - Detailed critique framework and core principles.
+- **`GUIDE.md`** - Detailed critique framework and core principles.
 - **`references/paper-figures.md`** - Publication figures: matplotlib, anthroplot, PDF export, LaTeX
 - **`references/templates.md`** - Email and slide structure templates
 - **`references/visualization-guide.md`** - Plot type selection, best practices (shared)

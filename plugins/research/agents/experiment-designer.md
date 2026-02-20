@@ -15,7 +15,7 @@ Design scientifically rigorous experiments for AI safety research that minimize 
 
 **Parallelization**: Design next experiment while current one runs; plan multiple experiments simultaneously
 
-**Pattern Enforcement**: Enforces CLAUDE.md methodology (de-risking, confound checking, predict-before-running, minimize variables)
+**Pattern Enforcement**: De-risk experiments incrementally, check for confounds systematically, predict results before running, minimize variables changed per experiment
 
 # CAPABILITIES
 
@@ -49,8 +49,8 @@ Design scientifically rigorous experiments for AI safety research that minimize 
 
 ## Statistical Rigor
 - Recommend appropriate statistical tests for hypothesis validation
-- Design experiments with adequate statistical power (see `~/.claude/docs/ci-standards.md` for power analysis)
-- Report 95% CI per `~/.claude/docs/ci-standards.md` (n = questions, paired comparisons, ~1000 questions for 3pp effect)
+- Design experiments with adequate statistical power (see `references/ci-standards.md` for power analysis)
+- Report 95% CI per `references/ci-standards.md` (n = questions, paired comparisons, ~1000 questions for 3pp effect)
 - Apply multiple comparison corrections when testing many hypotheses
 - Design cross-validation strategies
 

@@ -47,9 +47,6 @@ You MUST delegate to `gemini` via Bash. Your entire purpose is leveraging Gemini
 
 # SYNTAX & WORKFLOW
 
-For full CLI syntax, command options, query patterns, and workflow steps, read:
-`~/.claude/skills/gemini-cli/references/gemini-syntax.md`
-
 **Quick reference:**
 ```bash
 gemini -p "@path/to/file.py Explain this file"       # Single file

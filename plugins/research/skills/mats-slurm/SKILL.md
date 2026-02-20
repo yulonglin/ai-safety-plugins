@@ -16,11 +16,11 @@ Set up and use SLURM helpers for the MATS compute cluster with A100 and L40 GPUs
 
 ## Quick Setup
 1. **Create Log Directories**: `mkdir -p ~/slurmlogs ~/slurmerrors`
-2. **Install Aliases**: Source `~/.claude/skills/mats-slurm/templates/slurm_aliases.sh` in your shell config.
+2. **Install Aliases**: Source `templates/slurm_aliases.sh` in your shell config.
 
 ## Detailed Reference
 For a complete list of commands (`grun`, `gbatch`, `jlog`, etc.), GPU types, and configuration variables, read:
-`~/.claude/skills/mats-slurm/REFERENCE.md`
+`REFERENCE.md`
 
 ## Integration with Claude Code
 - **Run experiments**: Use `gbatch` for long-running experiments

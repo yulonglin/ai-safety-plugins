@@ -28,7 +28,7 @@ Parse experiment outputs, perform statistical analyses, create visualizations, a
 
 ## Statistical Analysis
 - Compute descriptive statistics (mean, median, std, quartiles)
-- Calculate 95% confidence intervals per `~/.claude/docs/ci-standards.md`
+- Calculate 95% confidence intervals per `references/ci-standards.md`
 - Perform significance testing (t-tests, Mann-Whitney, chi-square)
 - Apply multiple comparison corrections (Bonferroni, FDR)
 - Compute effect sizes (Cohen's d, correlation coefficients)
@@ -223,7 +223,7 @@ Choose visualizations based on what you're trying to show:
 
 # ANTHROPIC STYLING (for publication figures)
 
-**Reference**: `~/.claude/docs/anthroplot.md` for colors and setup.
+**Reference**: `references/anthroplot.md` for colors and setup.
 
 **Quick setup:**
 ```python
@@ -232,7 +232,7 @@ import matplotlib.pyplot as plt
 plt.style.use('~/.config/matplotlib/stylelib/anthropic.mplstyle')
 
 # Option 2: Full module (with helpers)
-# Copy anthroplot.py from ~/.claude/skills/research-presentation/references/
+# See references/anthroplot.md for setup instructions and color reference
 import anthroplot
 anthroplot.set_defaults(pretty=True)
 ```

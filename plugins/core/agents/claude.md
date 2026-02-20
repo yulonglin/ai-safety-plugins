@@ -136,7 +136,7 @@ Use tools to explore - I want your judgment on what would be best for this codeb
 ```
 Implement the API endpoints defined in specs/api-spec.md.
 
-- Working directory: /Users/yulong/code/myproject
+- Working directory: /path/to/project
 - Framework: Express.js, TypeScript
 - Follow patterns in src/api/users.ts
 

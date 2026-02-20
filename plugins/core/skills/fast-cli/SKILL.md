@@ -202,23 +202,6 @@ git diff
 delta file1.txt file2.txt
 ```
 
-## Custom Utilities (dotfiles)
-
-Located in `custom_bins/`:
-
-| Command | Purpose |
-|---------|---------|
-| `utc_date` | Outputs date in DD-MM-YYYY format |
-| `utc_timestamp` | Outputs DD-MM-YYYY_HH-MM-SS |
-| `tmux-clean` | Start tmux with minimal environment |
-| `tsesh` | Tmux session management |
-| `twin` | Tmux window management |
-| `rcopy`/`rpaste` | Remote clipboard (SSH) |
-| `machine-name` | Get machine hostname |
-| `sync-secrets` | Sync secrets with GitHub gist |
-| `clear-claude-code` | Clean up Claude Code sessions |
-| `clear-mac-apps` | Clean up macOS application data |
-
 ## Execution Guidelines
 
 When asked to perform file operations:

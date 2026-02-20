@@ -47,7 +47,7 @@ if [[ -f "$PATTERNS_FILE" ]]; then
       days_since=$(( (now_epoch - last_epoch) / 86400 ))
       if (( days_since > 14 )); then
         echo ""
-        echo "Warning: Last research reflection: ${days_since} days ago. Consider running /reflect"
+        echo "Warning: Last research reflection: ${days_since} days ago. Consider running /reflect (requires research plugin)"
       fi
     fi
   fi
@@ -74,6 +74,6 @@ if (( last_code_epoch > 0 && last_docs_epoch > 0 )); then
   if (( diff_days > threshold )); then
     echo ""
     echo "Warning: Code changed ${diff_days} days after last docs update."
-    echo "   Consider running /audit-docs to check for stale documentation."
+    echo "   Consider running /audit-docs to check for stale documentation (requires research plugin)."
   fi
 fi

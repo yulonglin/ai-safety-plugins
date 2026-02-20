@@ -7,8 +7,7 @@ Publication-quality figures for ICML, NeurIPS, ICLR, and other ML conferences.
 **Option 1: Matplotlib style file (recommended for simplicity)**
 ```python
 import matplotlib.pyplot as plt
-plt.style.use('/path/to/dotfiles/config/matplotlib/anthropic.mplstyle')
-# Or symlink to ~/.config/matplotlib/stylelib/ then: plt.style.use('anthropic')
+plt.style.use('anthropic')  # Requires anthropic.mplstyle installed in matplotlib stylelib
 ```
 
 **Option 2: anthroplot module (when you need helpers)**
@@ -18,7 +17,7 @@ import anthroplot
 anthroplot.set_defaults(pretty=True)
 ```
 
-See `~/.claude/docs/anthroplot.md` for color reference.
+See the anthroplot reference (bundled at `research/agents/references/anthroplot.md`) for color reference.
 
 ## Why Matplotlib (Not Plotly) for Papers
 

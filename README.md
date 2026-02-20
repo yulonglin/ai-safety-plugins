@@ -30,6 +30,7 @@ Foundational agents and skills that other plugins depend on.
 |-------|---------|---------------|
 | `efficient-explorer` | Context-efficient codebase exploration | None |
 | `context-summariser` | Conversation compression | None |
+| `claude` | Judgment-heavy delegation via Claude Code CLI | None |
 | `codex` | Implementation delegation via Codex CLI | Codex CLI + OpenAI key (optional) |
 | `gemini-cli` | Large context delegation via Gemini CLI | Gemini CLI + Google key (optional) |
 
@@ -58,7 +59,7 @@ AI safety research workflows.
 
 **Agents:** experiment-designer, research-engineer, data-analyst, literature-scout, research-advisor, research-skeptic
 
-**Skills:** `/spec-interview-research`, `/experiment-setup`, `/run-experiment`, `/api-experiments`, `/read-paper`, `/reproducibility-report`, `/generate-research-spec`, `/mats-slurm`
+**Skills:** `/spec-interview-research`, `/experiment-setup`, `/run-experiment`, `/api-experiments`, `/read-paper`, `/reproducibility-report`, `/generate-research-spec`, `/mats-slurm`, `/audit-docs`, `/new-experiment`, `/reflect`
 
 ### writing
 
@@ -72,9 +73,9 @@ Academic writing and presentations.
 
 Development workflow, code review, and delegation.
 
-**Agents:** code-reviewer, codex-reviewer, plan-critic, debugger, performance-optimizer, tooling-engineer, claude
+**Agents:** code-reviewer, codex-reviewer, plan-critic, debugger, performance-optimizer, tooling-engineer
 
-**Skills:** `/codex-cli`, `/claude-code`, `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
+**Skills:** `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
 
 **Depends on:** `core` (codex and gemini-cli agents)
 
@@ -82,7 +83,7 @@ Development workflow, code review, and delegation.
 
 Agent orchestration and conversation management.
 
-**Skills:** `/agent-teams`, `/custom-compact`, `/externalise-handover`, `/insights`
+**Skills:** `/agent-teams`, `/custom-compact`, `/externalise-handover`, `/custom-insights`
 
 **Hooks (convenience, opt-out via env var):**
 | Hook | Event | Purpose | Disable |
@@ -116,7 +117,7 @@ TikZ diagrams and Anthropic-style visualization.
 | Google API key | opt | — | — | opt | opt | — |
 | Python 3.9+ | — | REQ | — | — | REQ* | — |
 
-\* For `/insights` skill only.
+\* For `/custom-insights` skill only.
 \** eza, bat, dust, duf, fzf, zoxide, delta, jq.
 
 ## Full Setup
@@ -130,6 +131,10 @@ brew install --cask mactex  # Only for viz / presentations
 codex auth           # OpenAI key (for Codex delegation)
 gh auth login        # GitHub token (optional)
 ```
+
+### Optional Reference Docs
+
+Some agents reference documentation from `~/.claude/docs/` for enhanced functionality. These docs are optional — agents work without them but provide richer output when they're available. If you use the [dotfiles](https://github.com/yulonglin/dotfiles) repo, these are deployed automatically. Otherwise, bundled copies are included in each plugin's `agents/references/` directory.
 
 ## Enable Always-On
 

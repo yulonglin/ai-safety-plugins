@@ -118,7 +118,7 @@ TASK: Add a `parse_duration` function to src/utils/time.py that converts human-r
 duration strings (e.g., "5m", "2h30m", "1d") into seconds.
 
 CONTEXT:
-- Working directory: /Users/yulong/code/myproject
+- Working directory: /path/to/project
 - Key files: src/utils/time.py (add function here), tests/test_time.py (add tests)
 - Language: Python 3.11, pytest for tests
 

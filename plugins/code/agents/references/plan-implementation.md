@@ -98,7 +98,7 @@ TASK: Create authentication middleware and apply to protected routes.
    - Test malformed token → 401
 
 CONTEXT:
-- Working directory: /Users/yulong/code/myproject
+- Working directory: /path/to/project
 - Key files: src/utils/jwt.ts (already has verifyToken), src/routes/api.ts
 - Language: TypeScript, Express, Jest
 

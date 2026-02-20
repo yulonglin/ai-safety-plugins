@@ -28,7 +28,7 @@ Create a structured experiment record to track hypotheses, setup, results, and l
    ```
    Example: `docs/experiments/2026-02-20_c3-honest-wrong-control.md`
 
-3. **Copy the template** from `docs/experiments/_template.md` if it exists in the project. If not, use the reference template at `~/.claude/skills/new-experiment/references/template.md`.
+3. **Copy the template** from `docs/experiments/_template.md` if it exists in the project. If not, use the reference template at `references/template.md`.
 
 4. **Fill in the frontmatter** from the user's description:
    - `title`: Descriptive experiment title
