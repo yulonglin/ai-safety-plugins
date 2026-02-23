@@ -18,18 +18,18 @@ This skill enables proper use of the task management system with UTC timestamps 
 
 When creating plans (via EnterPlanMode or in plan mode), save them with informative, timestamped names:
 
-**Format:** `.claude/plans/YYYYMMDD_HHmmss_UTC_descriptive_name.md`
+**Format:** `plans/YYYYMMDD_HHmmss_UTC_descriptive_name.md`
 
 **Examples:**
-- `.claude/plans/20260125_143022_UTC_stripe_payment_integration.md`
-- `.claude/plans/20260125_150000_UTC_database_migration_postgres15.md`
-- `.claude/plans/20260125_160000_UTC_auth_refactor_to_oauth2.md`
+- `plans/20260125_143022_UTC_stripe_payment_integration.md`
+- `plans/20260125_150000_UTC_database_migration_postgres15.md`
+- `plans/20260125_160000_UTC_auth_refactor_to_oauth2.md`
 
 **Best practices:**
 - Include the feature/problem name in the filename
 - Use underscores for readability
 - Avoid generic names like "plan.md" or "implementation.md"
-- Save to `.claude/plans/` directory for organization
+- Save to `plans/` directory for organization
 
 ## Task List Management
 

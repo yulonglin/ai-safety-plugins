@@ -10,23 +10,23 @@ PLAN_PATH="${1:-.}"
 # Determine repo root
 REPO_ROOT=$(git rev-parse --show-toplevel 2>/dev/null || echo "")
 
-# Validate: Plans must be in per-project .claude/plans, NOT global ~/.claude/plans
+# Validate: Plans must be in per-project plans/, NOT global ~/.claude/plans
 if [[ "$PLAN_PATH" == "$HOME/.claude/plans/"* ]]; then
     cat >&2 <<'EOF'
 ❌ ERROR: Plans must be per-project, not global
 
-Global location (.claude/.claude/plans/):
+Global location (~/.claude/plans/):
   ❌ WRONG - plans mix work from different projects
 
-Per-project location (.claude/plans/):
+Per-project location (plans/):
   ✅ CORRECT - each project has its own plans
 
 Solution:
   1. Check current directory: pwd
   2. Ensure you're in the project root
-  3. Create plan again (Claude will auto-detect .claude/plans/)
+  3. Create plan again (Claude will auto-detect plans/)
   4. Alternative: Set environment variables
-     export CLAUDE_CODE_PLANS_DIR='.claude/plans'
+     export CLAUDE_CODE_PLANS_DIR='plans'
      export CLAUDE_CODE_TASKS_DIR='.claude/tasks'
 
 EOF
@@ -69,7 +69,7 @@ But plan seems to be outside:
   $PLAN_PATH
 
 Did you mean to create in:
-  $REPO_ROOT/.claude/plans/
+  $REPO_ROOT/plans/
 EOF
     fi
 fi

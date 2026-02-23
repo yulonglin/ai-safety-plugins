@@ -106,7 +106,7 @@ Build prompts that leverage Claude's strengths:
 
 **Plan Review:**
 ```
-Review the implementation plan at .claude/plans/auth-refactor.md.
+Review the implementation plan at plans/auth-refactor.md.
 
 Explore the relevant source files to understand the current implementation.
 
@@ -232,7 +232,7 @@ Claude excels at plan review because it can explore the codebase with tools AND 
 
 ```bash
 claude -p --model sonnet --permission-mode bypassPermissions \
-  "Read .claude/plans/feature-plan.md, then explore the relevant source files. Identify: 1) Missed edge cases 2) Simpler alternatives 3) Potential issues 4) Files needing changes not mentioned. Use your judgment - what would you do differently?"
+  "Read plans/feature-plan.md, then explore the relevant source files. Identify: 1) Missed edge cases 2) Simpler alternatives 3) Potential issues 4) Files needing changes not mentioned. Use your judgment - what would you do differently?"
 ```
 
 **What Claude finds**: Architectural issues, naming problems, missed abstractions, subjective quality problems, better approaches.
