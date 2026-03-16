@@ -6,19 +6,19 @@ Detailed reference for the `codex-reviewer` agent. Loaded on demand — not alwa
 
 ### Branch Diff (default)
 ```bash
-codex exec review --base main -o ./tmp/codex-review.txt
+codex exec review --base main -o $TMPDIR/codex-review.txt
 ```
 Reviews all changes on the current branch vs main. Best for PR-style review of accumulated work.
 
 ### Uncommitted Changes
 ```bash
-codex exec review --uncommitted -o ./tmp/codex-review.txt
+codex exec review --uncommitted -o $TMPDIR/codex-review.txt
 ```
 Reviews staged + unstaged changes. Useful for quick pre-commit review. Note: includes untracked files which can be noisy.
 
 ### Specific Commit
 ```bash
-codex exec review --commit <SHA> -o ./tmp/codex-review.txt
+codex exec review --commit <SHA> -o $TMPDIR/codex-review.txt
 ```
 Reviews a single commit. Useful for reviewing someone else's commit or a specific change.
 
@@ -71,7 +71,7 @@ Reviews a single commit. Useful for reviewing someone else's commit or a specifi
 To focus Codex on specific areas, add instructions to the prompt:
 
 ```bash
-codex exec review --base main -o ./tmp/review.txt \
+codex exec review --base main -o $TMPDIR/review.txt \
   --instructions "Focus on: 1) Race conditions in the cache layer 2) Error handling in API routes 3) Null safety in the new parser"
 ```
 
@@ -79,7 +79,7 @@ codex exec review --base main -o ./tmp/review.txt \
 
 ### Sync (most reviews, <500 lines changed)
 ```bash
-OUTPUT="./tmp/codex-review-$(date -u +%m%d-%H%M).txt"
+OUTPUT="$TMPDIR/codex-review-$(date -u +%m%d-%H%M).txt"
 cd <repo-root> && codex exec review --base main -o "$OUTPUT"
 cat "$OUTPUT"
 ```
@@ -89,7 +89,7 @@ cat "$OUTPUT"
 TASK_NAME="codex-review-$(date -u +%m%d-%H%M)"
 tmux has-session -t delegates 2>/dev/null || tmux new-session -d -s delegates -n default
 tmux new-window -t delegates -n "$TASK_NAME"
-tmux-cli send "cd <repo-root> && codex exec review --base main -o ./tmp/${TASK_NAME}.txt 2>&1 | tee ./tmp/${TASK_NAME}.log" --pane="delegates:${TASK_NAME}.1"
+tmux-cli send "cd <repo-root> && codex exec review --base main -o $TMPDIR/${TASK_NAME}.txt 2>&1 | tee $TMPDIR/${TASK_NAME}.log" --pane="delegates:${TASK_NAME}.1"
 ```
 
 ## Differentiation: codex-reviewer vs code-reviewer

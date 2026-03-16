@@ -91,7 +91,7 @@ End with a 1-2 sentence overall assessment.
 
 ### Sync (most plans)
 ```bash
-OUTPUT="./tmp/codex-plan-critique-$(date -u +%m%d-%H%M).txt"
+OUTPUT="$TMPDIR/codex-plan-critique-$(date -u +%m%d-%H%M).txt"
 codex exec --full-auto -c model_reasoning_effort="xhigh" \
   -C <repo-root> -o "$OUTPUT" "<prompt>"
 cat "$OUTPUT"
@@ -102,7 +102,7 @@ cat "$OUTPUT"
 TASK_NAME="codex-plan-critique-$(date -u +%m%d-%H%M)"
 tmux has-session -t delegates 2>/dev/null || tmux new-session -d -s delegates -n default
 tmux new-window -t delegates -n "$TASK_NAME"
-tmux-cli send "cd <repo-root> && codex exec --full-auto -c model_reasoning_effort='xhigh' -o ./tmp/${TASK_NAME}.txt '<prompt>' 2>&1 | tee ./tmp/${TASK_NAME}.log" --pane="delegates:${TASK_NAME}.1"
+tmux-cli send "cd <repo-root> && codex exec --full-auto -c model_reasoning_effort='xhigh' -o $TMPDIR/${TASK_NAME}.txt '<prompt>' 2>&1 | tee $TMPDIR/${TASK_NAME}.log" --pane="delegates:${TASK_NAME}.1"
 ```
 
 ## Differentiation: plan-critic vs claude

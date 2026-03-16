@@ -42,7 +42,7 @@ You MUST delegate to `codex exec review` via Bash. Your entire purpose is levera
 # EXECUTION
 
 ```bash
-OUTPUT="./tmp/codex-review-$(date -u +%m%d-%H%M).txt"
+mkdir -p "$TMPDIR" && OUTPUT="$TMPDIR/codex-review-$(date -u +%m%d-%H%M).txt"
 cd <repo-root> && codex exec review --base main -o "$OUTPUT"
 cat "$OUTPUT"
 ```

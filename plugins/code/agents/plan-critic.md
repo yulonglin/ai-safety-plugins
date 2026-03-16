@@ -75,7 +75,7 @@ When both `plan-critic` (Codex) and `claude` (Claude) review a plan:
 # EXECUTION
 
 ```bash
-OUTPUT="./tmp/codex-plan-critique-$(date -u +%m%d-%H%M).txt"
+mkdir -p "$TMPDIR" && OUTPUT="$TMPDIR/codex-plan-critique-$(date -u +%m%d-%H%M).txt"
 codex exec --full-auto -c model_reasoning_effort="xhigh" -C <repo-root> -o "$OUTPUT" "<prompt>"
 ```
 
