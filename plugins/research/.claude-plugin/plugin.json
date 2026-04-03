@@ -1,11 +1,25 @@
 {
   "name": "research",
   "description": "AI safety research workflows: experiment design, execution, analysis, and literature review.",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": {
     "name": "yulong"
   },
   "repository": "https://github.com/yulonglin/ai-safety-plugins",
   "license": "MIT",
-  "keywords": ["ai-safety", "experiments", "research", "analysis"]
+  "keywords": ["ai-safety", "experiments", "research", "analysis"],
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/nudge_transcript_review.sh",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
 }

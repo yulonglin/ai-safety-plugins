@@ -74,6 +74,10 @@ LOOP:
    - Commit with descriptive message
    - Run the experiment command
    - Extract metrics from output
+   - **Transcript spot-check:** If experiment produces eval logs or transcript output,
+     run `python check_transcripts.py <output_path>` to sample and check transcripts.
+     If CRITICAL issues found (degenerate scorer, systematic errors), treat experiment
+     as INVALID regardless of metric. Log findings to research-log.md.
    - Compare against threshold/baseline
    - Log results to both `results.tsv` and `research-log.md`
    - Keep or discard based on spec's criteria
@@ -95,6 +99,7 @@ LOOP:
 | 3+ consecutive failures | Write diagnostic summary to research-log.md, stop the loop |
 | Budget exceeded | Write final summary, stop |
 | Out of ideas | Attempt up to 3 combinations of near-miss strategies, then stop |
+| Transcript review: CRITICAL | Log issue, attempt fix (1 try), rerun. If still CRITICAL, skip to next |
 
 # OUTPUT
 
@@ -106,6 +111,7 @@ The human cares about two artifacts:
    - **Hypothesis:** What you expected and why
    - **Changes:** What you modified (files, lines)
    - **Result:** Metrics (all of them, not just the target)
+   - **Transcript check:** [clean / N issues — summary]
    - **Threshold met:** yes/no
    - **Insight:** What this tells you about the problem
    - **Next step:** What to try based on this result

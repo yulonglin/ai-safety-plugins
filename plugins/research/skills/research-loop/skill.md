@@ -170,8 +170,14 @@ For overnight runs, also consider:
 When the user returns, help them review:
 1. Read `research-log.md` for the narrative
 2. Read `results.tsv` for structured data
-3. Identify the best strategy and its evidence
-4. Decide next steps: refine the winner, try new directions, or ship
+3. **Review transcripts**: Run `/review-transcripts` on the latest eval logs to verify
+   scorer correctness and catch issues the autonomous agent's spot-checks may have missed.
+   Focus especially on:
+   - Experiments marked INVALID by the agent (what went wrong?)
+   - The best-performing experiment (is the improvement real or a scorer artifact?)
+   - Any experiments with suspiciously perfect or zero scores
+4. Identify the best strategy and its evidence
+5. Decide next steps: refine the winner, try new directions, or ship
 
 ## Examples
 

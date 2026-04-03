@@ -53,6 +53,13 @@ Use sortable timestamps so alphabetical = chronological:
    - Use `tmux-cli capture --pane=experiments:<EXP_NAME>.1` for recent output
    - Use `tail -50 tmp/<EXP_NAME>.log` for log contents
 
+6. **Transcript Review (after experiment completes)**:
+   - Run: `python check_transcripts.py <output_path>` (Tier 1: deterministic checks)
+     Works with .eval, JSONL, log directories, or raw text — auto-detects format
+   - If issues found OR experiment is important: spawn `research:transcript-reviewer` (Tier 2)
+   - For Inspect AI evals: recommend `scout scan <eval_log>` if inspect_scout is installed
+   - Report findings to user before declaring experiment complete
+
 ## Example
 
 User: `/run-experiment uv run python train.py --model gpt2-small --epochs 100`
