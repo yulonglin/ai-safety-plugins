@@ -5,16 +5,21 @@ description: Mark session as done — generates a descriptive name (if needed) a
 
 # Mark Session Done
 
-Run the done script to mark this session complete:
+## Steps
+
+1. **Generate a name** by running the done script. It returns the title to use:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/skills/done/done.sh"
 ```
 
-This will:
-1. Find the current session's transcript
-2. If no name exists, call Haiku to generate a 2-5 word descriptive name from user messages
-3. Prepend ✅ and write it as the session title
-4. Set terminal + tmux window name
+2. **Apply the name** using `/rename <title>` with the output from step 1.
 
-If it reports "Already done", the session was already marked. Confirm the result to the user.
+The script handles:
+- Detecting existing titles (reuses them, strips duplicate checkmarks)
+- Generating new names via Haiku from the first user messages
+- Prepending the ✅ checkmark
+
+**Important:** You MUST use `/rename` to set the title — writing directly to the transcript JSONL does NOT update the live session UI. The `/rename` command updates both the file and the in-memory cache.
+
+If the script reports "Already done", the session was already marked — just confirm to the user.
