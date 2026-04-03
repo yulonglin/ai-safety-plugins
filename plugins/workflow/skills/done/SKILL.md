@@ -5,21 +5,18 @@ description: Mark session as done — generates a descriptive name (if needed) a
 
 # Mark Session Done
 
-## Steps
-
-1. **Generate a name** by running the done script. It returns the title to use:
+1. Run the script to generate the session title:
 
 ```bash
 "${CLAUDE_PLUGIN_ROOT}/skills/done/done.sh"
 ```
 
-2. **Apply the name** using `/rename <title>` with the output from step 1.
+2. The script outputs the title (e.g., `✅ Build Done Skill`). Tell the user to run:
 
-The script handles:
-- Detecting existing titles (reuses them, strips duplicate checkmarks)
-- Generating new names via Haiku from the first user messages
-- Prepending the ✅ checkmark
+```
+/rename <the title from step 1>
+```
 
-**Important:** You MUST use `/rename` to set the title — writing directly to the transcript JSONL does NOT update the live session UI. The `/rename` command updates both the file and the in-memory cache.
+**Why /rename is needed:** Writing to the transcript JSONL only persists for `/resume`. The live session UI reads from an in-memory cache that only `/rename` updates. There is no external API to set it programmatically.
 
-If the script reports "Already done", the session was already marked — just confirm to the user.
+If the script outputs "Already done" to stderr, the session is already marked — confirm to the user.
