@@ -52,10 +52,7 @@ if [[ "$is_experiment" == "true" ]]; then
 For custom scaffolds: check if model behavior matches researcher intent."
 
     jq -n --arg msg "$nudge" '{
-      hookSpecificOutput: {
-        hookEventName: "PostToolUse",
-        message: $msg
-      }
+      systemMessage: $msg
     }'
 fi
 

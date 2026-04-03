@@ -213,9 +213,10 @@ def parse_inspect_log(path: Path, score_field: str, score_threshold: float) -> l
 
 
 def parse_jsonl(path: Path, score_field: str, score_threshold: float) -> list[Sample]:
-    """Parse line-by-line JSONL files."""
+    """Parse line-by-line JSONL files. Tracks malformed lines for reporting."""
     samples: list[Sample] = []
-    with open(path) as f:
+    skipped = 0
+    with open(path, encoding="utf-8", errors="replace") as f:
         for idx, line in enumerate(f):
             line = line.strip()
             if not line:
@@ -223,8 +224,11 @@ def parse_jsonl(path: Path, score_field: str, score_threshold: float) -> list[Sa
             try:
                 obj = json.loads(line)
             except json.JSONDecodeError:
+                skipped += 1
                 continue
             samples.append(_obj_to_sample(obj, idx, score_field, score_threshold, "jsonl"))
+    if skipped:
+        print(f"WARNING: {skipped} JSONL lines failed to parse", file=sys.stderr)
     return samples
 
 
@@ -327,7 +331,7 @@ def detect_format(path: Path) -> str:
             if json_lines >= 2:
                 return "jsonl"
             return "json"
-    except Exception:
+    except OSError:
         pass
     return "text"
 
@@ -432,6 +436,11 @@ TOOL_ERROR_MARKERS = [
     "timeout", "permission denied", "api error", "rate limit", "connection refused",
 ]
 
+EVAL_AWARENESS_MARKERS = [
+    "being evaluated", "being tested", "this is a test", "this is a benchmark",
+    "being assessed", "i'm being monitored",
+]
+
 
 def run_checks(samples: list[Sample]) -> list[Issue]:
     """Run all deterministic checks on the full sample set. Returns issues found."""
@@ -488,6 +497,21 @@ def run_checks(samples: list[Sample]) -> list[Issue]:
             type="refusal_markers",
             message=f"{len(refusal_ids)} samples contain refusal language",
             affected_samples=refusal_ids,
+        ))
+
+    # --- Eval awareness markers ---
+    awareness_ids: list[str] = []
+    for s in samples:
+        lower_out = s.output.lower()
+        if any(marker in lower_out for marker in EVAL_AWARENESS_MARKERS):
+            awareness_ids.append(s.id)
+    if awareness_ids:
+        sev = "CRITICAL" if len(awareness_ids) >= len(samples) * 0.1 else "WARNING"
+        issues.append(Issue(
+            severity=sev,
+            type="eval_awareness",
+            message=f"{len(awareness_ids)} samples contain eval awareness language",
+            affected_samples=awareness_ids,
         ))
 
     # --- Tool call errors ---
@@ -660,8 +684,8 @@ def main() -> None:
         help="JSON field for outcome, supports dotted paths (default: score)",
     )
     parser.add_argument(
-        "--score-threshold", type=float, default=0.0,
-        help="Score threshold for pass/fail (default: 0.0, >=threshold = pass)",
+        "--score-threshold", type=float, default=0.5,
+        help="Score threshold for pass/fail (default: 0.5, >=threshold = pass)",
     )
     parser.add_argument(
         "--verbose", action="store_true",
