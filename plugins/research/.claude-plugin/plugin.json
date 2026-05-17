@@ -1,13 +1,22 @@
 {
   "name": "research",
   "description": "AI safety research workflows: experiment design, execution, analysis, and literature review.",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": {
     "name": "yulong"
   },
   "repository": "https://github.com/yulonglin/ai-safety-plugins",
   "license": "MIT",
   "keywords": ["ai-safety", "experiments", "research", "analysis"],
+  "mcpServers": {
+    "zotero": {
+      "command": "uvx",
+      "args": ["--from", "zotero-mcp-server", "zotero-mcp"],
+      "env": {
+        "ZOTERO_LOCAL": "true"
+      }
+    }
+  },
   "hooks": {
     "PostToolUse": [
       {
