@@ -127,10 +127,10 @@ When an agent fails or returns incomplete work:
 
 This mode composes with, not replaces, existing skills:
 
-- **2-3 parallel independent tasks?** → Use `dispatching-parallel-agents` patterns
-- **Sequential plan execution?** → Use `subagent-driven-development` patterns
-- **Complex multi-agent communication?** → Escalate to `agent-teams`
-- **Need a plan first?** → Use `writing-plans` before dispatching
+- **2-3 parallel independent tasks?** → Use `superpowers:dispatching-parallel-agents` patterns
+- **Sequential plan execution?** → Use `superpowers:subagent-driven-development` patterns
+- **Complex multi-agent communication?** → Escalate to `workflow:agent-teams`
+- **Need a plan first?** → Use `superpowers:writing-plans` before dispatching
 
 ## Context Budget
 
