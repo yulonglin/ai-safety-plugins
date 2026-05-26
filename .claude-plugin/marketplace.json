@@ -53,10 +53,10 @@
     {
       "name": "viz",
       "source": "./plugins/viz",
-      "description": "TikZ diagrams and Anthropic-style visualization",
+      "description": "TikZ diagrams, Anthropic-style visualization, and Tufte data-viz principles",
       "version": "1.0.0",
       "category": "visualization",
-      "keywords": ["tikz", "diagrams", "visualization", "plotting"],
+      "keywords": ["tikz", "diagrams", "visualization", "plotting", "tufte"],
       "license": "MIT"
     }
   ]
