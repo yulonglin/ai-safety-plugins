@@ -1,10 +1,27 @@
 ---
 name: claude
-description: Delegate judgment-heavy tasks to Claude Code CLI. Use for plan review, architecture decisions, parallel implementation, and tasks needing tool use or MCP access.
+description: Delegate detached/long-running or fresh-auth headless work to Claude Code CLI via `claude -p`. NOT the default for routine judgment — prefer Task subagents. Use this ONLY when you need a tmux-detached process, separate auth context, or true headless execution.
 
 model: inherit
 color: purple
 tools: ["Bash"]
+---
+
+# WHEN NOT TO USE THIS AGENT
+
+**Default to a plain `Task` subagent (general-purpose) for routine judgment, exploration, plan review, and second-opinion work.** Task subagents:
+- Stay on the **subscription quota** (this agent's `claude -p` hits the separate API-billed Agent SDK pool, post-June-15 2026)
+- Have the same fresh context window
+- Inherit MCP access from the parent
+- Can run in parallel via `run_in_background: true`
+
+**Use `core:claude` ONLY when you specifically need one of:**
+- **Detached, long-running execution** — work that should outlive the parent Claude Code session, launched into tmux
+- **Fresh auth context** — e.g. a different `ANTHROPIC_API_KEY` than the parent session uses
+- **True headless execution** — driven from cron, external triggers, or non-TUI parents
+
+For routine "review this plan / give me a second opinion / explore this codebase" → **Task subagent, not this agent.** Same capabilities, free under subscription.
+
 ---
 
 # HARD RULE — READ FIRST
