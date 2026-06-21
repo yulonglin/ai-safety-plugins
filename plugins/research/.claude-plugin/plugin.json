@@ -26,6 +26,31 @@
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/nudge_transcript_review.sh",
             "timeout": 5
+          },
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/research_methodology_reviewer.py",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/research_methodology_reviewer.py",
+            "timeout": 15
+          }
+        ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/research_methodology_reviewer.py",
+            "timeout": 15
           }
         ]
       }
