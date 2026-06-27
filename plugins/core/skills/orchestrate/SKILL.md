@@ -35,8 +35,8 @@ Everything else. Specifically:
 | Instead of... | Delegate to... |
 |---------------|----------------|
 | **Read / Grep / Glob** (exploring code) | `efficient-explorer` or `Explore` agent |
-| **Edit / Write** (changing code) | `core:codex` or `core:claude` agent |
-| **Bash** (running commands, tests, builds) | Implementation agent or `core:codex` |
+| **Edit / Write** (changing code) | `core:claude` agent, or `codex-companion` (Monitor tool) |
+| **Bash** (running commands, tests, builds) | Implementation agent, or `codex-companion` (Monitor tool) |
 | **WebFetch / WebSearch** (research) | `general-purpose` or `literature-scout` agent |
 | **Read** (reviewing agent output files) | Skim agent summaries; dispatch reviewer agent for deep checks |
 
@@ -54,9 +54,9 @@ User request: "Add authentication to the API"
 Decomposition:
 1. [Explore] Survey existing auth patterns in codebase → efficient-explorer
 2. [Design] Propose auth architecture → core:claude (judgment-heavy)
-3. [Implement] Add auth middleware → core:codex (clear spec)
-4. [Implement] Add auth to each endpoint → core:codex (clear spec, after #3)
-5. [Test] Write integration tests → core:codex (after #3)
+3. [Implement] Add auth middleware → codex-companion (clear spec)
+4. [Implement] Add auth to each endpoint → codex-companion (clear spec, after #3)
+5. [Test] Write integration tests → codex-companion (after #3)
 6. [Review] Code review → code:code-reviewer (after #3-5)
 ```
 
@@ -89,8 +89,8 @@ Maintain a dispatch ledger via TodoWrite:
 ```
 - [ ] [Explore] Survey auth patterns — agent:explorer-1
 - [x] [Design] Auth architecture — agent:claude-1 → chose JWT + middleware
-- [ ] [Implement] Auth middleware — agent:codex-1 (waiting on design)
-- [ ] [Test] Integration tests — agent:codex-2 (waiting on impl)
+- [ ] [Implement] Auth middleware — codex-companion job-1 (waiting on design)
+- [ ] [Test] Integration tests — codex-companion job-2 (waiting on impl)
 ```
 
 Update after each agent completes. Note key decisions inline.

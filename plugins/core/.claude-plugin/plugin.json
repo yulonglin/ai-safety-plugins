@@ -1,6 +1,6 @@
 {
   "name": "core",
-  "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Codex/Gemini), spec interviews, docs search, and safety hooks.",
+  "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Claude/Gemini), spec interviews, docs search, and safety hooks.",
   "version": "1.0.0",
   "author": { "name": "Yulong Lin" },
   "repository": "https://github.com/yulonglin/ai-safety-plugins",
