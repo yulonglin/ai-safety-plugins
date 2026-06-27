@@ -87,7 +87,7 @@ For detailed critique checklist and prompt template, read `references/plan-criti
 |-------|------|
 | **plan-critic** (this) | Concrete implementation gaps (Codex reasoning) |
 | **claude** | Architectural judgment, taste, approach alternatives |
-| **codex** | Implementation after plan is approved |
+| **codex-companion** (Monitor tool) | Implementation after plan is approved |
 | **codex-reviewer** | Post-implementation bug review |
 
-**Pattern**: claude reviews approach + plan-critic catches gaps → codex implements → code-reviewer + codex-reviewer review
+**Pattern**: claude reviews approach + plan-critic catches gaps → codex-companion implements → code-reviewer + codex-reviewer review

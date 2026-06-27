@@ -31,8 +31,9 @@ Foundational agents and skills that other plugins depend on.
 | `efficient-explorer` | Context-efficient codebase exploration | None |
 | `context-summariser` | Conversation compression | None |
 | `claude` | Judgment-heavy delegation via Claude Code CLI | None |
-| `codex` | Implementation delegation via Codex CLI | Codex CLI + OpenAI key (optional) |
 | `gemini-cli` | Large context delegation via Gemini CLI | Gemini CLI + Google key (optional) |
+
+> Codex implementation delegation is no longer a homegrown `core` agent — use the official `codex-companion` (Monitor tool, from the `codex-plugin-cc` plugin), which is harness-tracked and orphan-safe.
 
 **Skills:**
 | Skill | Purpose |
@@ -77,7 +78,7 @@ Development workflow, code review, and delegation.
 
 **Skills:** `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
 
-**Depends on:** `core` (codex and gemini-cli agents)
+**Depends on:** `core` (claude and gemini-cli agents)
 
 ### workflow
 
@@ -107,13 +108,13 @@ TikZ diagrams and Anthropic-style visualization.
 | Dependency | core | research | writing | code | workflow | viz |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Claude Code v2.1+** | REQ | REQ | REQ | REQ | REQ | REQ |
-| Codex CLI | opt | — | — | REQ | — | — |
+| Codex CLI | — | — | — | REQ | — | — |
 | Gemini CLI | opt | — | — | opt | REQ* | — |
 | `fd` + `rg` | opt | — | — | — | — | — |
 | `bun`/`bunx` | — | — | opt | — | — | — |
 | LaTeX | — | — | opt | — | — | REQ |
 | Modern CLI tools** | opt | — | — | — | — | — |
-| OpenAI API key | opt | opt | — | opt | — | — |
+| OpenAI API key | — | opt | — | opt | — | — |
 | Google API key | opt | — | — | opt | opt | — |
 | Python 3.9+ | — | REQ | — | — | REQ* | — |
 

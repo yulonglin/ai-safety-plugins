@@ -89,6 +89,6 @@ No contention with `code-reviewer` — different tools (Codex CLI vs Claude Read
 | **codex-reviewer** (this) | Concrete bugs via Codex reasoning models |
 | **code-reviewer** | Design, quality, CLAUDE.md compliance via Claude |
 | **plan-critic** | Pre-implementation plan critique |
-| **codex** | Implementation |
+| **codex-companion** (Monitor tool) | Implementation |
 
-**Pattern**: plan-critic reviews plan → codex implements → code-reviewer + codex-reviewer review in parallel
+**Pattern**: plan-critic reviews plan → codex-companion implements → code-reviewer + codex-reviewer review in parallel

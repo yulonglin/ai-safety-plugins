@@ -1,6 +1,6 @@
 # Plan-Driven Implementation Guide
 
-Detailed reference for the `codex` agent when implementing from an approved plan. Loaded on demand.
+Detailed reference for delegating plan-driven implementation to `codex-companion` (Monitor tool). Loaded on demand.
 
 ## Plan-Aware Prompt Template
 
@@ -33,11 +33,11 @@ After implementing, run: <test command or verification step>
 
 ## Chunking Strategy
 
-Break plans into Codex-sized pieces based on step count:
+Break plans into codex-companion-sized pieces based on step count:
 
 | Plan steps | Chunking | Rationale |
 |------------|----------|-----------|
-| 1-3 steps | Single Codex invocation | Small enough for one pass |
+| 1-3 steps | Single codex-companion job | Small enough for one pass |
 | 4-7 steps | 2-3 chunks (2-3 steps each) | Keeps context manageable |
 | 8+ steps | Per-step invocations | Each step is self-contained |
 
@@ -69,7 +69,7 @@ Step 3: Add authentication middleware
 - Add tests in tests/middleware/auth.test.ts
 ```
 
-### Codex Prompt
+### codex-companion Prompt
 ```
 You are implementing step 3 of an approved plan. Do not explore or ask questions — implement directly.
 

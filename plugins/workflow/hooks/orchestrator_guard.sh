@@ -43,7 +43,7 @@ case "$TOOL" in
         echo "ORCHESTRATOR: Consider delegating this read to an efficient-explorer agent instead of reading directly." >&2
         ;;
     Edit|Write)
-        echo "ORCHESTRATOR: Consider delegating this edit to a codex or claude agent instead of writing directly." >&2
+        echo "ORCHESTRATOR: Consider delegating this edit to a core:claude agent or codex-companion (Monitor tool) instead of writing directly." >&2
         ;;
     Bash)
         echo "ORCHESTRATOR: Consider delegating this command to a subagent instead of running it directly." >&2
