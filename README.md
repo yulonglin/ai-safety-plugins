@@ -33,7 +33,14 @@ Foundational agents and skills that other plugins depend on.
 | `claude` | Judgment-heavy delegation via Claude Code CLI | None |
 | `gemini-cli` | Large context delegation via Gemini CLI | Gemini CLI + Google key (optional) |
 
-> Codex implementation delegation is no longer a homegrown `core` agent — use the official `codex-companion` (Monitor tool, from the `codex-plugin-cc` plugin), which is harness-tracked and orphan-safe.
+> Codex implementation delegation is no longer a homegrown `core` agent — use the official `codex-companion` (Monitor tool), which is harness-tracked and orphan-safe. It ships in the separate `codex-plugin-cc` plugin (not bundled with this marketplace), so install it once before following any `codex-companion` instructions:
+>
+> ```bash
+> /plugin marketplace add openai/codex-plugin-cc
+> /plugin install codex@openai-codex
+> /reload-plugins
+> /codex:setup   # one-time Codex CLI auth check
+> ```
 
 **Skills:**
 | Skill | Purpose |

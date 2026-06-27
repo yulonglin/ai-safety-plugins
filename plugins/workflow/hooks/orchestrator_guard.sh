@@ -22,7 +22,7 @@ TOOL=$(echo "$INPUT" | jq -r '.tool_name // ""')
 # Tools that are always allowed in orchestrator mode (no warning)
 case "$TOOL" in
     Agent|SendMessage|TaskCreate|TaskUpdate|TaskGet|TaskList|TaskOutput|TaskStop|\
-    TodoWrite|TodoRead|EnterPlanMode|ExitPlanMode|Skill|AskUserQuestion|\
+    Monitor|TodoWrite|TodoRead|EnterPlanMode|ExitPlanMode|Skill|AskUserQuestion|\
     ToolSearch|Config)
         exit 0
         ;;
