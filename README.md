@@ -81,11 +81,13 @@ Academic writing and presentations.
 
 Development workflow, code review, and delegation.
 
-**Agents:** code-reviewer, codex-reviewer, plan-critic, debugger, performance-optimizer, tooling-engineer
+**Agents:** code-reviewer, debugger, performance-optimizer, tooling-engineer
 
 **Skills:** `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
 
 **Depends on:** `core` (claude and gemini-cli agents)
+
+> Codex-based review and plan critique are no longer homegrown `code` agents — use `codex-companion` (Monitor tool): `review` / `adversarial-review` for code changes, `plan-review <file>` for plans. See the [core redirect note](#core-recommended-always-on) for one-time install.
 
 ### workflow
 
@@ -115,13 +117,12 @@ TikZ diagrams and Anthropic-style visualization.
 | Dependency | core | research | writing | code | workflow | viz |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Claude Code v2.1+** | REQ | REQ | REQ | REQ | REQ | REQ |
-| Codex CLI | — | — | — | REQ | — | — |
 | Gemini CLI | opt | — | — | opt | REQ* | — |
 | `fd` + `rg` | opt | — | — | — | — | — |
 | `bun`/`bunx` | — | — | opt | — | — | — |
 | LaTeX | — | — | opt | — | — | REQ |
 | Modern CLI tools** | opt | — | — | — | — | — |
-| OpenAI API key | — | opt | — | opt | — | — |
+| OpenAI API key | — | opt | — | — | — | — |
 | Google API key | opt | — | — | opt | opt | — |
 | Python 3.9+ | — | REQ | — | — | REQ* | — |
 

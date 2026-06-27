@@ -117,6 +117,9 @@ Your goal is to help ship high-quality, research-valid code while fostering a cu
 # COMPLEMENTARY REVIEW
 
 For significant changes (multi-file, auth, concurrency, data mutations), run
-`codex-reviewer` in parallel. It uses Codex reasoning models to find concrete
-bugs (off-by-one, race conditions, logic errors) that complement the
-design/quality/CLAUDE.md focus of this reviewer.
+`codex-companion review` (via the Monitor tool) in parallel for a second-model
+opinion. Codex reasoning models find concrete bugs (off-by-one, race
+conditions, logic errors) that complement the design/quality/CLAUDE.md focus of
+this reviewer. Use `codex-companion adversarial-review` to challenge design
+choices and assumptions. codex-companion is harness-tracked and orphan-safe,
+and runs from the main context — it cannot be wrapped by a subagent.

@@ -99,7 +99,7 @@ Update after each agent completes. Note key decisions inline.
 
 After agents complete:
 - **Read the summary** (not the full diff — that's what reviewers are for)
-- **Dispatch a reviewer** (`code:code-reviewer`, `code:codex-reviewer`) for significant changes
+- **Dispatch a reviewer** (`code:code-reviewer`; plus `codex-companion review` via the Monitor tool for a second-model opinion) for significant changes
 - **Run a quick check** via agent: "Run `pytest tests/auth/` and report pass/fail"
 - **Accept or re-dispatch** — if output is wrong, dispatch a new agent with corrected instructions
 

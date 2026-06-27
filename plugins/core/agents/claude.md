@@ -234,9 +234,9 @@ claude -p --model sonnet --permission-mode bypassPermissions \
 
 **What Claude finds**: Architectural issues, naming problems, missed abstractions, subjective quality problems, better approaches.
 
-**What Codex finds better**: Concrete bugs (off-by-one, race conditions, missing error paths) — reach for it via `codex-companion` (Monitor tool) or the `code:plan-critic` / `code:codex-reviewer` agents.
+**What Codex finds better**: Concrete bugs (off-by-one, race conditions, missing error paths) — reach for it via `codex-companion` (Monitor tool): `plan-review <file>` for plans, `review` / `adversarial-review` for code changes.
 
-**Use both**: Claude reviews the approach, `code:plan-critic` spots concrete implementation gaps. For important plans, run both in parallel.
+**Use both**: Claude reviews the approach, `codex-companion plan-review` spots concrete implementation gaps. For important plans, run both in parallel.
 
 # LIMITATIONS
 
@@ -261,15 +261,13 @@ Report errors to user with suggested fixes.
 | Agent | Use Case |
 |-------|----------|
 | **claude** (this) | Judgment, taste, nuanced reasoning, tool use |
-| **codex-companion** (Monitor tool) | Precise implementation of clear specs; harness-tracked, orphan-safe |
-| **code:plan-critic** | Concrete implementation gaps in plans (Codex reasoning) |
-| **code:codex-reviewer** | Bug-focused review of code changes (Codex reasoning) |
+| **codex-companion** (Monitor tool) | Precise implementation of clear specs; harness-tracked, orphan-safe. Also `plan-review`/`review`/`adversarial-review` for Codex-reasoning critique |
 | **code:code-reviewer** | Design quality, CLAUDE.md compliance |
 | **core:gemini-cli** | Large context analysis (PDFs, entire codebases) |
 
 **Patterns:**
-- **claude + code:plan-critic**: Claude reviews approach → plan-critic catches concrete gaps → codex-companion implements
-- **claude + codex-companion**: Claude reviews the plan → codex-companion implements → code:code-reviewer + code:codex-reviewer review
+- **claude + codex-companion plan-review**: Claude reviews approach → `plan-review` catches concrete gaps → codex-companion implements
+- **claude + codex-companion**: Claude reviews the plan → codex-companion implements → code:code-reviewer + codex-companion `review` check it
 - **claude + core:gemini-cli**: Gemini analyzes large codebase → Claude makes architectural recommendations
 - **Parallel delegation**: You work on X, delegate Y to claude, delegate Z to codex-companion
 
