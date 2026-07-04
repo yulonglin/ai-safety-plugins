@@ -138,7 +138,7 @@ Acceptable in informal contexts (Slack, casual docs, slides), but bias towards r
 | "There are several reasons..." then listing | Just list the reasons |
 | Conclusion that restates intro | Add new insight or call to action |
 | Uniform paragraph lengths | Vary based on content |
-| Bullet points for everything | Use prose when flow matters |
+| Bullet points for narrative or argument (chains of "because A, therefore B") | Use prose when the logic connects — save bullets/tables for comparable data and parallel independent items |
 
 ### Tone-Level
 | Instead of | Do |
