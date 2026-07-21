@@ -40,7 +40,7 @@ Reference the **research-interview-guide.md** for 15 question categories.
    - Run: `sysctl hw.physicalcpu hw.memsize` (macOS) or `nproc && free -h` (Linux)
    - Compare to stated requirements, warn if insufficient
    - Format: "System has X cores / Y GB, you need A cores / B GB - ✓/⚠"
-6. **Iterate until checklist complete**: Ensure all blocking items covered
+6. **Iterate until the core is solid**: Overview, Research Question & Hypotheses, Requirements, and Acceptance Criteria fully defined — don't chase conditional categories (5-7, 10, 11, 13-15) unless they're genuinely non-obvious for this study
 
 **Categories to cover** (see research-interview-guide.md for detailed questions):
 1. Research Question & Motivation
@@ -64,10 +64,8 @@ Reference the **research-interview-guide.md** for 15 question categories.
 Once interview complete, write spec to `specs/research-interview-$(utc_date).md` using **research-spec-template.md**.
 
 **Spec requirements:**
-- Fill all template sections based on interview responses
-- Include resource validation results (✓/⚠ marks)
-- Complete validation checklist at end
-- Keep spec focused (~100-150 lines)
+- Overview, Research Question & Hypotheses, Requirements, Acceptance Criteria are mandatory
+- Every other section is opt-in — include only where the interview surfaced a real, non-obvious answer; delete it otherwise (never write "N/A")
 - Use exact user terminology and values
 
 ### 4. Review & Iterate
@@ -88,7 +86,7 @@ Make revisions as needed.
 - **Scientific rigor**: Hypotheses must be falsifiable
 - **Explicit assumptions**: Challenge vague or implicit assumptions
 - **Resource realism**: Validate requirements against available resources
-- **Reproducibility first**: Seeds, versions, logging planned upfront
+- **Output path always specified**: seeds/code version/logging plan only when reproducibility is unusually tight for this study
 - **Minimize confounds**: Identify and control alternative explanations
 
 ## Example Interaction
