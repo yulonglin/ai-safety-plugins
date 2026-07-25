@@ -1,6 +1,6 @@
 # Research Interview Spec: [Topic]
 
-Three sections carry the spec. Everything after the divider is optional — include only if it earns its place, and delete the section entirely if it doesn't apply. Never fill an unused section with "N/A" / "None" / "TBD".
+Four sections carry the spec — the usual three (Overview, Requirements, Acceptance Criteria) plus Research Question & Hypotheses, which feature specs don't need. Everything after the divider is optional — include only if it earns its place, and delete the section entirely if it doesn't apply. Never fill an unused section with "N/A" / "None" / "TBD".
 
 **Created**: DD-MM-YYYY · **Status**: Draft
 

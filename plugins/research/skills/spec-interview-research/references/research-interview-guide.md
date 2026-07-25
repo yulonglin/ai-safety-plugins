@@ -1,6 +1,6 @@
 # Research Interview Guide
 
-**Core — always cover these** (categories 1-4, 8, 9, 12; they map directly to the spec's three mandatory sections). **Conditional — the rest** (5-7, 10, 11, 13-15): only probe if the answer would be non-obvious for this study. Skip a category outright if it clearly doesn't apply rather than asking a pro-forma question and writing "N/A" in the spec. Categories 13-14 in particular are usually just "see `docs/research-methodology.md` / `docs/async-and-performance.md`" — don't re-derive standard caching/concurrency/retry patterns per spec; only ask if this experiment needs something nonstandard.
+**Core — always cover these** (categories 1-4, 8, 9, 12; they map directly to the spec's four mandatory sections: Overview, Research Question & Hypotheses, Requirements, Acceptance Criteria). **Conditional — the rest** (5-7, 10, 11, 13-15): only probe if the answer would be non-obvious for this study. Skip a category outright if it clearly doesn't apply rather than asking a pro-forma question and writing "N/A" in the spec. Categories 13-14 in particular are usually just "see `docs/research-methodology.md` / `docs/async-and-performance.md`" — don't re-derive standard caching/concurrency/retry patterns per spec; only ask if this experiment needs something nonstandard.
 
 ## 1. Research Question & Motivation
 - What exactly are you investigating?
