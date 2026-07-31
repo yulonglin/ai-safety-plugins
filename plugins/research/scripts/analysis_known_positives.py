@@ -195,7 +195,7 @@ def main():
     lines.append("")
     lines.append("=== taxonomy of GENUINE findings (what the skill rubric must cover) ===")
     themes = Counter()
-    theme_pats = {  # noqa: F841 - also used below to build the strict positive set
+    theme_pats = {  # also used below to build the strict positive set
         "circular reasoning / outcome->label": r"circular|outcome[- ]to[- ]label|outcome-based",
         "hardcoded expected values": r"hardcoded|hard-coded|expected value",
         "post-hoc filtering / cherry-pick": r"post[- ]hoc|cherry[- ]pick|filtering",
