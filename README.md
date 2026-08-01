@@ -92,7 +92,7 @@ Development workflow, code review, and delegation.
 
 Agent orchestration and conversation management.
 
-**Skills:** `/agent-teams`, `/custom-compact`, `/externalise-handover`, `/custom-insights`
+**Skills:** `/agent-teams`, `/custom-compact`, `/externalise-handover`
 
 **Hooks (convenience, opt-out via env var):**
 | Hook | Event | Purpose | Disable |
@@ -116,18 +116,14 @@ TikZ diagrams and Anthropic-style visualization.
 | Dependency | core | research | writing | code | workflow | viz |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Claude Code v2.1+** | REQ | REQ | REQ | REQ | REQ | REQ |
-| Gemini CLI | opt† | — | — | — | REQ* | — |
 | `fd` + `rg` | opt | — | — | — | — | — |
 | `bun`/`bunx` | — | — | opt | — | — | — |
 | LaTeX | — | — | opt | — | — | REQ |
-| Modern CLI tools** | opt | — | — | — | — | — |
+| Modern CLI tools* | opt | — | — | — | — | — |
 | OpenAI API key | — | opt | — | — | — | — |
-| Google API key | opt† | — | — | — | opt | — |
-| Python 3.9+ | — | REQ | — | — | REQ* | — |
+| Python 3.9+ | — | REQ | — | — | — | — |
 
-\* For `/custom-insights` skill only.
-\** eza, bat, dust, duf, fzf, zoxide, delta, jq.
-\† For the optional Tier-2 output summarization in `truncate_output.sh` only — the hook falls back to plain truncation when `gemini` is absent.
+\* eza, bat, dust, duf, fzf, zoxide, delta, jq.
 
 ## Full Setup
 
@@ -135,7 +131,6 @@ TikZ diagrams and Anthropic-style visualization.
 # macOS
 brew install fd ripgrep
 brew install codex          # Only for codex-companion (separate codex-plugin-cc plugin)
-brew install gemini-cli     # Optional: /custom-insights + Tier-2 output summarization
 brew install --cask mactex  # Only for viz / presentations
 
 # Auth

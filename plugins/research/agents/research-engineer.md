@@ -47,7 +47,7 @@ Based on analysis of safety-tooling, latteries, and safety-examples repositories
   @retry(stop=stop_after_attempt(5), wait=wait_exponential(multiplier=1, min=4, max=60),
          retry=retry_if_exception_type(RateLimitError))
   ```
-- **Unified interface**: Abstract base classes supporting multiple providers (OpenAI, Anthropic, Gemini)
+- **Unified interface**: Abstract base classes supporting multiple providers (Anthropic, OpenAI, OpenRouter)
 - **Batching**: Group API calls when possible to reduce overhead
 - **Context managers**: Implement `async __aenter__/__aexit__` for cleanup and flushing
 - **Progress tracking**: Use `tqdm.asyncio` for async progress bars on long-running operations

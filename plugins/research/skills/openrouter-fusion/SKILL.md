@@ -43,7 +43,6 @@ resp = httpx.post(
     "type": "openrouter:fusion",
     "parameters": {
       "analysis_models": [
-        "~google/gemini-flash-latest",
         "deepseek/deepseek-v3.2",
         "~moonshotai/kimi-latest"
       ],

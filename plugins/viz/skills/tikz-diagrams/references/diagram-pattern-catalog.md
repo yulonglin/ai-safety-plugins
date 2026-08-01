@@ -259,7 +259,7 @@ All examples use `anthropic-tikz.sty` which defines:
 
 **Key styles**: `fill opacity`, overlapping `\fill` rectangles, circle holes, colored arrows
 **Complexity**: Medium — requires careful layering
-**This is where generative tools shine**: Nano Banana Pro produces creative metaphorical visuals faster than manual TikZ.
+**This is where generative tools shine**: a text-to-image model produces creative metaphorical visuals faster than manual TikZ.
 
 
 ---
@@ -564,13 +564,13 @@ All examples use `anthropic-tikz.sty` which defines:
 ## Workflow: TikZ + Generative AI
 
 ### Paper figures (final quality)
-1. Sketch concept in Nano Banana Pro / whiteboard (5 min)
+1. Sketch concept on a whiteboard or with a text-to-image model (5 min)
 2. Build in TikZ using this catalog's skeleton code (30min – 3h)
 3. Compile and visually inspect for overlaps/clipping
 4. Iterate
 
 ### Blog posts / presentations (speed)
-1. Generate with Nano Banana Pro + pastel palette prompt
+1. Generate with a text-to-image model + pastel palette prompt
 2. Refine with targeted edits
 3. Export PNG at 2x
 
@@ -579,7 +579,7 @@ All examples use `anthropic-tikz.sty` which defines:
 2. Export as PDF
 3. Optional TikZ annotation overlays
 
-### Nano Banana Pro prompt template:
+### Text-to-image prompt template:
 ```
 Create a clean, minimalist technical diagram showing [DESCRIPTION].
 Style: Pastel colors (soft blue #C5D5EA, lavender #D5C5E8, peach #FDDCB5,
