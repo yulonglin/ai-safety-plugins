@@ -26,7 +26,7 @@ Note which files changed, what was added/removed, and any new modules or configs
 
 ### 2. Read Current Documentation
 
-Read the following files (delegate heavy reads to Gemini CLI agent if >500 lines total):
+Read the following files (delegate heavy reads to `core:efficient-explorer` if >500 lines total):
 
 - `CLAUDE.md` — project quick reference
 - `AGENTS.md` — agent configuration (if exists)
@@ -70,7 +70,7 @@ For experiments with `status: active` but no activity in 2+ weeks:
 
 ## Delegation Strategy
 
-- **Gemini CLI**: For reading large doc files (>500 lines combined) and cross-referencing against code
+- **`core:efficient-explorer`**: For reading large doc files (>500 lines combined) and cross-referencing against code
 - **Direct**: For git log analysis, small file reads, and applying edits
 
 ## Notes

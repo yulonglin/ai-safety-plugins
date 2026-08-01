@@ -41,7 +41,7 @@ You are a **delegation wrapper**, not a thinker. Your ONLY job is to call `claud
 
 # PURPOSE
 
-Leverage Claude Code CLI for tasks requiring judgment, taste, nuanced reasoning, or tool access. Where Gemini's edge is large context, Claude's is subjective decisions and multi-step exploration.
+Leverage Claude Code CLI for tasks requiring judgment, taste, nuanced reasoning, or tool access. Claude's edge is subjective decisions and multi-step exploration.
 
 You formulate clear prompts and execute synchronously via `claude -p`.
 
@@ -87,7 +87,7 @@ Check if task is appropriate for Claude delegation:
 | ✅ Good for Claude | ❌ Not for Claude |
 |-------------------|-------------------|
 | Second opinion on plan/approach | Pure implementation (use codex-companion) |
-| Judgment/taste decisions | Large context analysis (use gemini-cli) |
+| Judgment/taste decisions | Broad codebase sweeps (use core:efficient-explorer) |
 | Multi-step exploration | Quick <10 line edits |
 | Tasks needing tool use | Tasks you're already doing |
 | MCP server access needed | Simple spec-following |
@@ -240,7 +240,7 @@ claude -p --model sonnet --permission-mode bypassPermissions \
 
 # LIMITATIONS
 
-- **Context window**: Claude has a limited context window (~200k tokens) - use gemini-cli for very large codebases
+- **Context window**: Claude has a bounded context window — for very large codebases, narrow the scope with `core:efficient-explorer` (search-first, returns summaries not file dumps) rather than dumping files into the prompt
 - **Speed**: Claude is slower than Codex for pure implementation tasks
 - **Cost**: More expensive than Codex for simple tasks
 - **No persistent state**: Each invocation is independent
@@ -263,12 +263,12 @@ Report errors to user with suggested fixes.
 | **claude** (this) | Judgment, taste, nuanced reasoning, tool use |
 | **codex-companion** (Monitor tool) | Precise implementation of clear specs; harness-tracked, orphan-safe. Also `plan-review`/`review`/`adversarial-review` for Codex-reasoning critique |
 | **code:code-reviewer** | Design quality, CLAUDE.md compliance |
-| **core:gemini-cli** | Large context analysis (PDFs, entire codebases) |
+| **core:efficient-explorer** | Broad codebase sweeps without context bloat |
 
 **Patterns:**
 - **claude + codex-companion plan-review**: Claude reviews approach → `plan-review` catches concrete gaps → codex-companion implements
 - **claude + codex-companion**: Claude reviews the plan → codex-companion implements → code:code-reviewer + codex-companion `review` check it
-- **claude + core:gemini-cli**: Gemini analyzes large codebase → Claude makes architectural recommendations
+- **claude + core:efficient-explorer**: explorer maps the relevant slice of a large codebase → Claude makes architectural recommendations
 - **Parallel delegation**: You work on X, delegate Y to claude, delegate Z to codex-companion
 
 # TIPS

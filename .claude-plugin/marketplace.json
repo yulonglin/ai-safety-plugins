@@ -8,7 +8,7 @@
     {
       "name": "core",
       "source": "./plugins/core",
-      "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Codex/Gemini), spec interviews, and docs search",
+      "description": "Foundational agents and skills: codebase exploration, conversation compression, CLI delegation (Claude), spec interviews, and docs search",
       "version": "1.0.0",
       "category": "core",
       "keywords": ["core", "agents", "delegation", "exploration"],

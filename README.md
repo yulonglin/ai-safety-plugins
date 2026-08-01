@@ -31,7 +31,6 @@ Foundational agents and skills that other plugins depend on.
 | `efficient-explorer` | Context-efficient codebase exploration | None |
 | `context-summariser` | Conversation compression | None |
 | `claude` | Judgment-heavy delegation via Claude Code CLI | None |
-| `gemini-cli` | Large context delegation via Gemini CLI | Gemini CLI + Google key (optional) |
 
 > Codex implementation delegation is no longer a homegrown `core` agent — use the official `codex-companion` (Monitor tool), which is harness-tracked and orphan-safe. It ships in the separate `codex-plugin-cc` plugin (not bundled with this marketplace), so install it once before following any `codex-companion` instructions:
 >
@@ -85,7 +84,7 @@ Development workflow, code review, and delegation.
 
 **Skills:** `/bulk-edit`, `/fix-merge-conflict`, `/deslop`
 
-**Depends on:** `core` (claude and gemini-cli agents)
+**Depends on:** `core` (claude agent)
 
 > Codex-based review and plan critique are no longer homegrown `code` agents — use `codex-companion` (Monitor tool): `review` / `adversarial-review` for code changes, `plan-review <file>` for plans. See the [core redirect note](#core-recommended-always-on) for one-time install.
 
@@ -102,7 +101,7 @@ Agent orchestration and conversation management.
 | `check_pipe_buffering` | PreToolUse:Bash | Warns about piping anti-patterns | Warn only |
 | `auto_log` | Pre/PostToolUse:Bash | Audit trail of commands | Async, non-blocking |
 
-**Depends on:** `core` (context-summariser, gemini-cli agents)
+**Depends on:** `core` (context-summariser agent)
 
 ### viz
 
@@ -117,27 +116,30 @@ TikZ diagrams and Anthropic-style visualization.
 | Dependency | core | research | writing | code | workflow | viz |
 |---|:---:|:---:|:---:|:---:|:---:|:---:|
 | **Claude Code v2.1+** | REQ | REQ | REQ | REQ | REQ | REQ |
-| Gemini CLI | opt | — | — | opt | REQ* | — |
+| Gemini CLI | opt† | — | — | — | REQ* | — |
 | `fd` + `rg` | opt | — | — | — | — | — |
 | `bun`/`bunx` | — | — | opt | — | — | — |
 | LaTeX | — | — | opt | — | — | REQ |
 | Modern CLI tools** | opt | — | — | — | — | — |
 | OpenAI API key | — | opt | — | — | — | — |
-| Google API key | opt | — | — | opt | opt | — |
+| Google API key | opt† | — | — | — | opt | — |
 | Python 3.9+ | — | REQ | — | — | REQ* | — |
 
 \* For `/custom-insights` skill only.
 \** eza, bat, dust, duf, fzf, zoxide, delta, jq.
+\† For the optional Tier-2 output summarization in `truncate_output.sh` only — the hook falls back to plain truncation when `gemini` is absent.
 
 ## Full Setup
 
 ```bash
 # macOS
-brew install codex gemini-cli fd ripgrep
+brew install fd ripgrep
+brew install codex          # Only for codex-companion (separate codex-plugin-cc plugin)
+brew install gemini-cli     # Optional: /custom-insights + Tier-2 output summarization
 brew install --cask mactex  # Only for viz / presentations
 
 # Auth
-codex auth           # OpenAI key (for Codex delegation)
+/codex:setup         # Codex CLI auth check (after installing codex-plugin-cc)
 gh auth login        # GitHub token (optional)
 ```
 

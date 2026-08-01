@@ -54,10 +54,10 @@ Synthesize learnings from recent experiments into the research patterns journal.
 
 Only run if user requests deeper analysis or says "deep reflect".
 
-1. **Delegate to Gemini CLI agent** for large context analysis:
+1. **Delegate to a subagent** (`core:efficient-explorer`, or `general-purpose` for transcript files) for the bulk read:
    - Pre-filter conversation transcripts to relevant sessions (experiment-related)
-   - Ask Gemini to identify: recurring problems, workflow inefficiencies, decisions made without clear rationale
-   - Merge Gemini's findings with Stage 1 results
+   - Ask it to identify: recurring problems, workflow inefficiencies, decisions made without clear rationale
+   - Merge those findings with Stage 1 results
 
 2. **Cross-reference** with experiment records to validate conversation-mined insights.
 

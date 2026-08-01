@@ -17,7 +17,7 @@ Provide constructive critical analysis of ML/AI research papers and drafts. Base
 
 For PDFs or long documents, delegate reading to a subagent:
 ```
-Task tool → subagent_type: "gemini" or "general-purpose"
+Task tool → subagent_type: "general-purpose"
 Prompt: "Read this document and return the full text with section structure preserved."
 ```
 
