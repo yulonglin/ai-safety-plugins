@@ -1,120 +1,42 @@
 # Research Interview Spec: [Topic]
 
+Four sections carry the spec — the usual three (Overview, Requirements, Acceptance Criteria) plus Research Question & Hypotheses, which feature specs don't need. Everything after the divider is optional — include only if it earns its place, and delete the section entirely if it doesn't apply. Never fill an unused section with "N/A" / "None" / "TBD".
+
+**Created**: DD-MM-YYYY · **Status**: Draft
+
 ## Overview
-**Created**: DD-MM-YYYY
-**Status**: Draft Interview Spec
+[1-2 sentences: what we're studying and why]
 
-[1-2 sentence summary]
-
-## Research Question
+## Research Question & Hypotheses
 [Specific, measurable question]
+- **H1**: [Hypothesis] → Prediction: [outcome] → Falsification: [what would disprove it]
 
-## Hypotheses
-- **H1**: [Hypothesis] → Prediction: [Specific outcome] → Falsification: [What would disprove]
-- **H2**: ...
+## Requirements
+*What defines the experiment — the actual contract, not prose.*
+- **Independent variables**: [what we manipulate + levels, e.g. model size: 1B/7B/13B]
+- **Dependent variables**: [exact metric definitions, e.g. "exact_match accuracy on MMLU"]
+- **Baselines**: [what we compare against, why fair]
+- **Datasets & models**: [name/version/source; model + key hyperparameters, with justification for non-default values]
 
-## Variables
-### Independent (What We Manipulate)
-- [Variable 1]: [Values/levels, e.g., model size: [1B, 7B, 13B]]
-- [Variable 2]: ...
+## Acceptance Criteria
+- **Validation**: [N and justification, significance threshold — how we'll know the result is trustworthy, not just present]
+- **Output path**: [exact directory, e.g. `out/DD-MM-YYYY_HH-MM-SS_experiment_name/`]
 
-### Dependent (What We Measure)
-- [Metric 1]: [Exact definition, e.g., "exact_match accuracy on MMLU"]
-- [Metric 2]: ...
+---
 
-### Control (Held Constant)
-- [Constant 1]: ...
+Add only if it earns its place — a real, non-obvious answer, not a placeholder:
 
-### Confounds & Controls
-| Confound | How Controlled |
-|----------|----------------|
-| [Alternative explanation] | [Method to rule out] |
+## Design
+[Control variables, confound handling, why this baseline is fair, sample-size derivation — only if non-obvious]
 
-## Models & Hyperparameters
-| Component | Choice | Justification |
-|-----------|--------|---------------|
-| Model | [e.g., Claude Sonnet 4.5] | [Why this model] |
-| Hyperparameter | [e.g., temperature=0.7] | [Why this value] |
+## Planned Visualizations
+- **Figure 1**: [X-axis, Y-axis, grouping, purpose — only if the plots aren't the obvious "metric vs. condition"]
 
-## Baselines
-- **Baseline 1**: [Description, why fair/strong]
-- **Baseline 2**: ...
-
-## Datasets
-- **Dataset**: [Name, version, source]
-- **Splits**: [Train/val/test sizes and selection]
-- **Preprocessing**: [Steps taken]
-
-## Metrics & Visualizations
-### Metrics to Track
-- [Metric 1, Metric 2, ...]
-
-### Planned Graphs
-- **Figure 1**: [X-axis: ..., Y-axis: ..., Grouping: ..., Purpose: ...]
-- **Figure 2**: ...
+## Engineering Notes
+[Only nonstandard caching / concurrency / retry / error-handling choices for this experiment — standard patterns already live in `docs/research-methodology.md` and `docs/async-and-performance.md`; link to them instead of re-deriving. Random seeds / code version only if reproducibility is unusually tight for this study.]
 
 ## Resources & Constraints
-**Validated Against System**:
-- **Compute**: [Needs X cores, system has Y] ✓/⚠
-- **Memory**: [Needs X GB, system has Y] ✓/⚠
-- **Budget**: [Estimated API cost: $X, available: $Y] ✓/⚠
-- **Timeline**: [Estimated duration]
-
-## Sample Size & Statistics
-- **N**: [Number of samples, justification]
-- **Significance**: [α threshold, e.g., p<0.05]
-- **Power**: [If calculated]
-
-## Performance & Caching Strategy
-### Caching
-- **What Gets Cached**: [e.g., API responses, model outputs, embeddings]
-- **Cache Keys**: [How uniqueness determined, e.g., `hash(model_name + prompt + temperature)`]
-- **Cache Location**: [e.g., `.cache/api_responses/`, per CLAUDE.md]
-- **Cache Invalidation**: [When to clear, e.g., model version change, prompt update, dataset change, or via `--clear-cache` flag]
-- **What Must Rerun**: [e.g., final aggregation, plotting, statistical tests]
-
-### Concurrency & Rate Limiting
-- **Concurrency Level**: [e.g., 100 concurrent API calls via `asyncio.Semaphore(100)`]
-- **Rate Limits**: [Known limits, e.g., "Anthropic: 50 req/min"]
-- **Backoff Strategy**:
-  - **Transient errors** (429, 503): Exponential backoff (1s, 2s, 4s, 8s, 16s max)
-  - **Permanent errors** (400, 401, 404): No retry, log and fail
-- **Retry Logic**: [e.g., `tenacity` library with max 5 retries]
-
-### Error Handling
-| Error Type | Retry? | Strategy |
-|------------|--------|----------|
-| 429 Rate Limit | Yes | Exponential backoff, respect retry-after header |
-| 503 Service Unavailable | Yes | Exponential backoff (max 3 retries) |
-| 500 Server Error | Yes | Exponential backoff (max 3 retries) |
-| 400 Bad Request | No | Log, skip sample, continue |
-| 401 Unauthorized | No | Fail immediately (check API key) |
-| Timeout | Yes | Retry with longer timeout (max 3 retries) |
-
-## Reproducibility Plan
-- **Random Seeds**: [Strategy, e.g., seeds=[42, 43, 44, 45, 46] for 5 runs]
-- **Code Version**: [Git commit or tag]
-- **Data Version**: [Hash or version number]
-- **Logging**: [What gets logged, where]
-- **Output Path**: [Exact directory, e.g., out/DD-MM-YYYY_HH-MM-SS_experiment_name/]
-
-## Validation Checklist (Pre-Run Gate)
-### BLOCKING (Must Pass)
-- [ ] Hyperparameters documented
-- [ ] Output path specified
-- [ ] Hypothesis with falsification criteria
-- [ ] Metrics defined
-- [ ] Datasets specified
-- [ ] Graphs planned
-- [ ] Caching strategy defined (what cached, what rerun)
-- [ ] Concurrency level specified
-- [ ] Error handling & retry logic documented
-
-### WARNING (Should Pass)
-- [ ] Random seeds set
-- [ ] Resources available
-- [ ] Baseline comparison defined
+[Only if compute/budget/timeline is a real risk for this run — omit if it's a routine-sized experiment]
 
 ## Open Questions
-- [ ] [Unresolved question 1]
-- [ ] [Unresolved question 2]
+- [ ] [Unresolved question — delete this section if there are none]

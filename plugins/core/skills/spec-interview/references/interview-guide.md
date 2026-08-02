@@ -2,57 +2,40 @@
 
 ## Question Categories
 
-Cover these areas systematically:
+**Core — always cover these** (they map directly to the spec's three mandatory sections):
 
-### 1. Core Functionality
+### 1. Core Functionality (→ Overview)
 - What's the primary user action?
 - What state changes occur?
 - What's the expected output/result?
 
-### 2. User Interactions
-- How do users trigger this?
-- What feedback do they see during/after?
-- What's the unhappy path UX?
+### 2. Requirements (→ Requirements)
+- What must the system do? (MUST)
+- What's recommended but not required? (SHOULD)
 
-### 3. Data Model
-- What data is created/modified/deleted?
-- What's the schema? Relationships?
-- How does this integrate with existing data?
-
-### 4. Error Handling
-- What external dependencies can fail?
-- What user errors are possible?
-- How should each failure mode be handled?
-
-### 5. Edge Cases
-- What happens with empty/null inputs?
-- Concurrent operations?
-- Partial completion scenarios?
-
-### 6. Integration
-- What existing systems does this touch?
-- API contracts with other services?
-- Who else might integrate with this?
-
-### 7. Performance
-- Expected load/throughput?
-- Latency requirements?
-- Scaling considerations?
-
-### 8. Security
-- Authentication/authorization model?
-- Data sensitivity?
-- Attack vectors to consider?
-
-### 9. Testing
+### 3. Testing (→ Acceptance Criteria)
 - How do we verify correctness?
 - What's hard to test?
-- Acceptance criteria?
 
-### 10. Rollout
-- Migration from current state?
-- Feature flag strategy?
-- Rollback plan?
+**Conditional — only probe if the answer would be non-obvious for this feature.** Skip a category outright if it clearly doesn't apply rather than asking a pro-forma question and writing "N/A" in the spec.
+
+### 4. User Interactions
+- What's the unhappy path UX, if there is one?
+
+### 5. Data Model
+- What data is created/modified/deleted, if the schema changes?
+
+### 6. Error Handling & Edge Cases
+- What external dependencies can fail? What happens with empty/null inputs or concurrent operations — only if genuinely ambiguous?
+
+### 7. Integration
+- What existing systems does this touch, if any?
+
+### 8. Performance & Security
+- Only ask for numbers if there's a real target (e.g. "must handle current load ×3") — don't manufacture a latency budget for a feature that doesn't need one
+
+### 9. Rollout
+- Migration/feature-flag/rollback plan — only for changes that touch production state or existing users
 
 ## Example Non-Obvious Questions
 
@@ -72,16 +55,10 @@ Instead of asking obvious questions, probe deeper:
 
 ## Completion Checklist
 
-Before writing the spec, ensure:
+Before writing the spec, the three core sections must be solid:
 
-- [ ] Core functionality fully defined
-- [ ] All user interactions mapped
-- [ ] Data model understood
-- [ ] Error handling planned for each failure mode
-- [ ] Edge cases identified and handled
-- [ ] Integration points clarified
-- [ ] Performance requirements quantified
-- [ ] Security model specified
-- [ ] Testing strategy outlined
-- [ ] Out-of-scope items explicitly listed
-- [ ] Open questions documented (OK to have some)
+- [ ] Overview: what + why is unambiguous
+- [ ] Requirements: MUST/SHOULD behaviors are concrete, not vague
+- [ ] Acceptance Criteria: someone else could verify "done" without asking you
+
+Everything else is judgment-call, not checklist — include a section only where category 4-9 above surfaced a real, non-obvious answer.

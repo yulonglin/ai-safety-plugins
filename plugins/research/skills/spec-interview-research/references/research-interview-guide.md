@@ -1,6 +1,6 @@
 # Research Interview Guide
 
-15 question categories for comprehensive research planning.
+**Core — always cover these** (categories 1-4, 8, 9, 12; they map directly to the spec's four mandatory sections: Overview, Research Question & Hypotheses, Requirements, Acceptance Criteria). **Conditional — the rest** (5-7, 10, 11, 13-15): only probe if the answer would be non-obvious for this study. Skip a category outright if it clearly doesn't apply rather than asking a pro-forma question and writing "N/A" in the spec. Categories 13-14 in particular are usually just "see `docs/research-methodology.md` / `docs/async-and-performance.md`" — don't re-derive standard caching/concurrency/retry patterns per spec; only ask if this experiment needs something nonstandard.
 
 ## 1. Research Question & Motivation
 - What exactly are you investigating?
@@ -78,24 +78,13 @@
 - Is the sample size sufficient to detect meaningful differences?
 
 ## 13. Performance & Caching Strategy
-- What gets cached? (API responses, embeddings, intermediate results)
-- Cache keys: How is uniqueness determined?
-- What needs to rerun? (aggregation, plotting, stats)
-- Concurrency level? (e.g., 100 concurrent API calls)
-- Exponential backoff strategy for rate limits?
+- Default: standard patterns in `docs/research-methodology.md` / `docs/async-and-performance.md` apply — don't ask this unless the study needs something nonstandard (unusual cache key, atypical concurrency limit)
 
 ## 14. Error Handling & Retries
-- Which errors are transient (429, 503) vs permanent (400, 401)?
-- Retry logic for transient errors?
-- How to handle rate limits? (exponential backoff, respect retry-after header)
-- What happens when retries exhausted?
+- Default: standard transient/permanent-error handling applies — only ask if this experiment has a failure mode the standard patterns don't cover
 
 ## 15. Reproducibility
-- Random seeds? (e.g., seeds=[42,43,44,45,46] for 5 runs)
-- Code version (git commit)?
-- Data version (hash or version tag)?
-- Logging plan: What gets logged and where?
-- Output path: Exact directory structure?
+- Output path is required (→ Acceptance Criteria). Seeds/code version/logging plan only if reproducibility is unusually tight for this study
 
 ---
 

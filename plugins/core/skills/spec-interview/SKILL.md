@@ -27,7 +27,8 @@ Build complete specifications through in-depth interviewing before implementatio
 - Ask **non-obvious** questions - not "what should it do?" but "what happens when X fails during Y?"
 - **2-4 questions per round**, probe deeper on vague answers
 - **Challenge assumptions** - "why not do X instead?"
-- Continue until all major areas covered
+- Continue until the three core areas (functionality, requirements, testing) are covered; only chase conditional categories where the answer is genuinely non-obvious for this feature — see `references/interview-guide.md`
+- **Bias toward a lean spec.** Overview, Requirements, and Acceptance Criteria are mandatory; every other section is opt-in and must be deleted, not filled with "N/A", if it doesn't apply — see `references/spec-template.md`
 
 ## Reference Files
 
