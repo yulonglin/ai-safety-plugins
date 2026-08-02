@@ -9,6 +9,30 @@ set -euo pipefail
 input=$(cat)
 command=$(echo "$input" | jq -r '.tool_input.command // ""')
 exit_code=$(echo "$input" | jq -r '.tool_output.exit_code // "0"')
+session_id=$(echo "$input" | jq -r '.session_id // "global"')
+
+# The nudge text below is a fixed block — every fire is byte-identical, so
+# repeating it carries no information. Measured at 1454 fires across recent
+# transcripts (~1.13M chars). One reminder per session per window is the whole
+# signal; the rest is duplication. Window and fail-open behaviour mirror
+# dotfiles' nudge_modern_tools.sh.
+DEBOUNCE_DIR="${HOME}/.cache/claude/nudge-transcript-review.d"
+DEBOUNCE_SECS=$((30 * 60))
+
+should_nudge() {
+    local key="$1" marker now last
+    mkdir -p "$DEBOUNCE_DIR" 2>/dev/null || return 0  # fail open
+    marker="$DEBOUNCE_DIR/$key"
+    now=$(date +%s)
+    if [[ -f "$marker" ]]; then
+        last=$(stat -f%m "$marker" 2>/dev/null || stat -c%Y "$marker" 2>/dev/null || echo 0)
+        if [[ $(( now - last )) -lt $DEBOUNCE_SECS ]]; then
+            return 1
+        fi
+    fi
+    : > "$marker" 2>/dev/null || return 0  # fail open
+    return 0
+}
 
 # Quick exit if empty or command failed
 [[ -z "$command" ]] && exit 0
@@ -42,7 +66,7 @@ elif [[ "$command" =~ pytest.*([Ee]val|[Bb]enchmark) ]]; then
     is_experiment=true
 fi
 
-if [[ "$is_experiment" == "true" ]]; then
+if [[ "$is_experiment" == "true" ]] && should_nudge "$session_id"; then
     nudge="⚠️ **Experiment command detected.** Before reporting results, review transcripts:
 1. Run: \`python check_transcripts.py <output_path>\` (Tier 1: deterministic checks — supports .eval, JSONL, log dirs, raw text)
 2. Spawn \`research:transcript-reviewer\` on extracted samples (Tier 2: LLM review)

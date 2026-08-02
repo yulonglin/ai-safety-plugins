@@ -1,11 +1,50 @@
 #!/usr/bin/env python3
-"""PostToolUse hook: LLM-based research methodology reviewer.
+"""RETIRED PostToolUse hook: LLM-based research methodology reviewer.
 
-Monitors Bash, Write, and Edit tool calls for methodological concerns in
-research workflows. Uses a lightweight regex pre-filter to avoid unnecessary
-API calls, then asks Haiku to review actions that look research-related.
+UNWIRED from plugin.json. Kept for reference, not registered on any event.
+Superseded by the `methodology-critic` skill, which reviews a design document
+instead of an individual tool call.
 
-Fails open (exit 0) on any error — informational nudges only, never blocks.
+Why it was retired, measured over 878 transcripts and the hook's own log:
+
+  - 2,490 nudges printed. An OK-gate bug (`response.strip().upper() == "OK"`,
+    exact match only) let every reply that merely *began* with "OK" through:
+    504 of 1,075 logged verdicts leaked this way, against 274 correctly
+    suppressed. ~85% of the ~1.9M characters it printed contained no finding.
+  - The remaining replies included a recurring confusion mode — "I can't
+    execute shell commands", "I don't see the output" — printed as findings.
+  - The precision ceiling was set by the *input*, not the prompt. Circular
+    reasoning, leakage and confounding are properties of an experimental
+    design; a single tool call rarely contains enough of the design to judge
+    them, so the reviewer was guessing from a fragment.
+
+Deterministic regex tripwires were evaluated as a cheap replacement and
+rejected. The load-bearing evidence is a clean negative: four tripwires
+written to encode the circularity patterns directly — label-from-score,
+threshold-on-test, best-threshold-on-test, hardcoded-id-to-condition — fired
+**zero** times across the 4,357 calls that passed this hook's own pre-filters,
+over the same 878 transcripts. Regexes that never fire cannot be worth their
+maintenance. See `scripts/analysis_tripwire_measure.py`.
+
+A second analysis tried to measure recall against known positives recovered
+from this hook's own verdicts (`scripts/analysis_known_positives.py`). It is
+reported here as INCONCLUSIVE, not as evidence:
+
+  - The positive labels are contaminated. Anything that was not literally "OK"
+    was counted as a finding, which sweeps in the confusion mode. Of 157 such
+    payloads, only 19 name a recognised failure mode.
+  - On those 19, the union of eight broad candidate signals hit 1, against a
+    4.5% fire rate on 265 negatives. At n=19 that separates nothing, and the
+    direction of the labelling bias is not established — so this number must
+    not be quoted as "tripwires perform at chance".
+  - The log is a self-trimming 500KB rolling file, so the corpus changes between
+    runs: an earlier pass over a larger window gave 213 positives / 528
+    negatives. Any figure derived from it is window-dependent.
+
+The rejection rests on the zero-fire result, which depends on no labelling.
+
+Original behaviour: monitored Bash, Write and Edit; regex pre-filter, then
+Haiku. Failed open (exit 0) on any error — informational nudges only.
 """
 from __future__ import annotations
 
