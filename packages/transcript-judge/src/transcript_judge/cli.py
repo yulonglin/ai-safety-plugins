@@ -415,7 +415,14 @@ def cluster(*, run: str, merge_prompt: str | None = None, model: str | None = No
         # the invocation figure goes to zero while the cumulative one -- summed
         # from the append-only cache rows -- still reports what the run cost.
         "tokens_this_invocation": {"in": stats.tokens_in, "out": stats.tokens_out},
-        "tokens_cumulative_from_cache": cache_token_totals(cache_path),
+        # Scoped to this cell, like every key above it: one cache file can hold
+        # rows from other prompts and models, and pooling them here would
+        # attribute their spend to this run.
+        "tokens_cumulative_from_cache": cache_token_totals(
+            cache_path,
+            merge_prompt_sha256=stats.merge_prompt_sha256,
+            model_id=stats.model_id,
+        ),
     }
     write_json(run_paths.manifest, manifest)
 

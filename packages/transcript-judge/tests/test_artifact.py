@@ -325,3 +325,85 @@ def test_the_inlined_json_round_trips():
 
     # The same object the page embeds must survive a JSON round trip.
     assert json.loads(json.dumps(overlap, ensure_ascii=False))["models"] == [MODEL_A, MODEL_B]
+
+
+# --- the positive-label Venn is not an agreement estimate --------------------
+
+
+def _reliability(labels: list[LabelRow], construct: str) -> dict:
+    payload = build_overlap(labels=labels, run_id="r", blinded=True)
+    return next(p for p in payload["reliability"] if p["construct"] == construct)
+
+
+def test_two_judges_agreeing_on_every_negative_draw_an_empty_venn():
+    """The case that made the old wording wrong: 0/0/0 drawn, 3/3 actual agreement.
+
+    Read as an agreement estimate the picture inverts the result -- it shows no
+    overlap at all for two judges that agreed on every single sample.
+    """
+    labels = [
+        label(s, "eval_awareness", m, False) for s in ("s1", "s2", "s3") for m in (MODEL_A, MODEL_B)
+    ]
+    panel = _reliability(labels, "eval_awareness")
+
+    assert (len(panel["only_a"]), len(panel["both"]), len(panel["only_b"])) == (0, 0, 0)
+    assert panel["raw_agreement"]["n_paired"] == 3
+    assert panel["raw_agreement"]["n_agree"] == 3
+    assert panel["raw_agreement"]["n_both_negative"] == 3
+
+
+def test_raw_agreement_counts_both_negative_and_both_positive_alike():
+    # s1 both positive, s2 disagree, s3 seen by one model only.
+    panel = _reliability(two_model_labels(), "flags_protocol_error")
+
+    assert (panel["raw_agreement"]["n_paired"], panel["raw_agreement"]["n_agree"]) == (2, 1)
+    assert panel["raw_agreement"]["n_both_negative"] == 0
+
+
+def test_one_cell_under_two_agreeing_prompt_versions_is_counted_once():
+    labels = [
+        label(s, "eval_awareness", m, False) for s in ("s1", "s2") for m in (MODEL_A, MODEL_B)
+    ]
+    labels += [x.model_copy(update={"prompt_sha256": "q" * 64}) for x in labels]
+    panel = _reliability(labels, "eval_awareness")
+
+    assert panel["raw_agreement"]["n_paired"] == 2, "a second prompt version is not a second sample"
+    assert panel["raw_agreement"]["n_cells_multi_version"] == 4
+    assert panel["raw_agreement"]["n_excluded_conflicting_versions"] == 0
+    # The caption reads "N of M cells"; without M, a multi-version count larger than
+    # n_paired reads as an error rather than as "every cell, counted per model".
+    assert panel["raw_agreement"]["n_cells_total"] == 4
+
+
+def test_a_cell_whose_prompt_versions_disagree_is_excluded_not_collapsed():
+    """Last-row-wins would silently pick a verdict; the denominator must drop instead."""
+    labels = [
+        label(s, "eval_awareness", m, False) for s in ("s1", "s2") for m in (MODEL_A, MODEL_B)
+    ]
+    labels.append(
+        label("s1", "eval_awareness", MODEL_A, True).model_copy(update={"prompt_sha256": "q" * 64})
+    )
+    panel = _reliability(labels, "eval_awareness")
+
+    assert panel["raw_agreement"]["n_paired"] == 1, "s1 is ambiguous and must not be counted"
+    assert panel["raw_agreement"]["n_excluded_conflicting_versions"] == 1
+
+
+def test_the_page_no_longer_calls_positive_overlap_an_agreement_estimate():
+    html = render_html(build_overlap(labels=two_model_labels(), run_id="r", blinded=True))
+
+    # The removed claim, not the bare phrase: the replacement copy legitimately
+    # contains "are not an agreement estimate", so a substring check on the
+    # phrase alone would fail on the very wording that fixes the defect.
+    assert "overlap is an agreement estimate" not in html
+    assert "are not an agreement estimate" in html
+    assert "Positive-label overlap (model vs model)" in html
+    assert "both models said no" in html
+    assert "Full raw agreement" in html
+
+
+def test_the_exploratory_panel_keeps_its_label():
+    html = render_html(build_overlap(labels=two_model_labels(), run_id="r", blinded=True))
+
+    assert "Exploratory only." in html
+    assert "not agreement" in html

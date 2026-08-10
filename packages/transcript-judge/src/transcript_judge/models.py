@@ -247,6 +247,13 @@ class PairVerdict(BaseModel):
     ``parse_ok`` separates a judged negative from a call whose response could
     not be read. Both leave ``equivalent`` false; only one of them is a
     decision, and without the flag a billed failure replays as a verdict.
+
+    **It does not mean what `JudgementRow.parse_ok` means, despite the shared
+    name.** There, false covers a transport failure too -- an HTTP error is
+    recorded as a row with `parse_error` set. Here a transport failure raises
+    out of the merge path and writes no row at all, so false always means "a
+    response arrived and could not be parsed". A run directory contains both
+    kinds of row; they are not summable into one parse-failure count.
     """
 
     canon_a: str
