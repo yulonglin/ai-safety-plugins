@@ -73,6 +73,8 @@ Summary in `transcript_review/summary.json` — aggregate findings and sample in
 - [ ] API timeouts or rate limits?
 - [ ] Retry loops consuming context?
 
+> Tier 1's `possible_refusal_heuristic` and `possible_tool_error_heuristic` issues are keyword triage, not classification — they miss paraphrase and fire on transcripts that merely quote the phrase. Before reporting either as a rate, confirm with `/judge-transcripts`, which classifies by meaning and grounds every positive in a verbatim span.
+
 ### 3.6 Format/Parsing
 - [ ] Score is null/None when output exists? (extraction failure)
 - [ ] Response truncated? (check if near max_tokens)

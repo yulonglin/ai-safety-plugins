@@ -18,7 +18,7 @@
       "name": "research",
       "source": "./plugins/research",
       "description": "AI safety research workflows: experiment design, execution, analysis, and literature review",
-      "version": "1.0.0",
+      "version": "1.3.0",
       "category": "research",
       "keywords": ["ai-safety", "experiments", "research", "analysis"],
       "license": "MIT"

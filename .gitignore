@@ -9,3 +9,8 @@
 # Runtime
 cache/
 *.log
+
+# pytest basetemp. Normally lives under the system temp dir, but when every
+# candidate there is unwritable (sandboxes) Python's tempfile falls back to the
+# working directory and the tree lands in the repo instead.
+pytest-of-*/

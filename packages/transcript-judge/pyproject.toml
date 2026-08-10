@@ -1,0 +1,46 @@
+[project]
+name = "transcript-judge"
+version = "0.1.0"
+description = "Hypotheses to judge prompts to grounded labels to clusters to an interactive overlap artifact."
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic>=2.7",
+    "httpx>=0.27",
+    "anyio>=4.4",
+    "cyclopts>=3.0",
+    "pydantic-settings>=2.3",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+inspect = ["inspect-ai>=0.3.50"]
+
+[project.scripts]
+tj = "transcript_judge.cli:main"
+
+[build-system]
+requires = ["uv_build>=0.8,<0.12"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = ["pytest>=8.2", "ruff>=0.6", "ty>=0.0.1a1"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "RUF"]
+# RUF001-003 flag "ambiguous" unicode. This package exists to handle exactly
+# those characters — µ, ×, °C and the six dash variants the grounding ladder
+# folds — so every hit is a deliberate literal, and autofixing one would
+# silently break the normalization table it belongs to.
+ignore = ["B008", "RUF001", "RUF002", "RUF003"]
+
+[tool.ty.environment]
+python-version = "3.11"
