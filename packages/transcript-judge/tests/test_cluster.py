@@ -14,12 +14,13 @@ from conftest import anthropic_payload, finding
 from transcript_judge.cluster import (
     MERGE_FIELD,
     build_merge_prompt,
+    cache_token_totals,
     canonicalize,
     cluster_labels,
     load_cache,
 )
 from transcript_judge.models import LabelRow
-from transcript_judge.persist import read_jsonl
+from transcript_judge.persist import append_jsonl, read_jsonl
 from transcript_judge.providers import UnsupportedParamError
 from transcript_judge.providers.anthropic import parse_raw as anthropic_parse_raw
 
@@ -43,8 +44,12 @@ class FakeMergeClient:
     async def complete(self, *, system: str, user: str, model_id: str, params: dict):
         self.calls.append({"system": system, "user": user, "model_id": model_id, "params": params})
         if self.malformed:
+            # Usage is present on purpose: an unreadable response was still billed.
             return anthropic_parse_raw(
-                {"content": [{"type": "text", "text": "not json at all"}], "usage": {}}
+                {
+                    "content": [{"type": "text", "text": "not json at all"}],
+                    "usage": {"input_tokens": 5, "output_tokens": 3},
+                }
             )
         lines = user.splitlines()
         a, b = lines[1], lines[4]
@@ -376,3 +381,115 @@ def test_merge_judge_parse_failures_are_counted_and_default_to_not_equivalent(tm
     assert stats.parse_failures == 3
     assert stats.n_clusters == 3
     assert [a.members for a in assignments] == [["aaa first"], ["bbb second"], ["ccc third"]]
+
+
+# --- cached verdicts carry their own evidence --------------------------------
+
+
+def test_a_cached_verdict_records_the_rationale_and_quote_it_was_decided_on(tmp_path):
+    """Read back off disk, not off the in-memory object that was just populated.
+
+    A cache row replays forever, so ``equivalent: true`` on its own is a verdict
+    nobody can review. The strings are asserted verbatim against what the judge
+    returned and *together with* `equivalent`, because a row carrying the
+    rationale for the opposite decision would satisfy either assertion alone.
+    """
+    cache = tmp_path / "cache.jsonl"
+    run(three_labels(), cache, FakeMergeClient({("aaa first", "bbb second")}))
+
+    rows = {(r["canon_a"], r["canon_b"]): r for r in read_jsonl(cache)}
+    positive = rows[("aaa first", "bbb second")]
+    assert (positive["equivalent"], positive["rationale"], positive["quote"]) == (
+        True,
+        "deliberating about equivalent",
+        "aaa first",
+    )
+    negative = rows[("bbb second", "ccc third")]
+    assert (negative["equivalent"], negative["rationale"], negative["quote"]) == (
+        False,
+        "deliberating about equivalent",
+        "bbb second",
+    )
+
+
+def test_a_judged_negative_is_not_confusable_with_an_unreadable_response(tmp_path):
+    """Both cache ``equivalent: false``; only `parse_ok` says which is a decision."""
+    judged = tmp_path / "judged.jsonl"
+    failed = tmp_path / "failed.jsonl"
+    run(three_labels(), judged, FakeMergeClient(set()))
+    run(three_labels(), failed, FakeMergeClient(set(), malformed=True))
+
+    assert [(r["equivalent"], r["parse_ok"], r["rationale"]) for r in read_jsonl(judged)] == [
+        (False, True, "deliberating about equivalent")
+    ] * 3
+    assert [(r["equivalent"], r["parse_ok"], r["rationale"]) for r in read_jsonl(failed)] == [
+        (False, False, "")
+    ] * 3
+
+
+# --- merge-path token accounting ---------------------------------------------
+
+
+def test_merge_tokens_are_recorded_per_pair_and_summed_for_the_invocation(tmp_path):
+    cache = tmp_path / "cache.jsonl"
+    _, stats = run(three_labels(), cache, FakeMergeClient(set()))
+
+    assert [(r["tokens_in"], r["tokens_out"]) for r in read_jsonl(cache)] == [(11, 22)] * 3
+    assert (stats.tokens_in, stats.tokens_out) == (33, 66)
+    assert cache_token_totals(cache) == {
+        "tokens_in": 33,
+        "tokens_out": 66,
+        "rows": 3,
+        "rows_missing": 0,
+    }
+
+
+def test_an_unparseable_response_still_counts_the_tokens_it_was_billed_for(tmp_path):
+    cache = tmp_path / "cache.jsonl"
+    _, stats = run(three_labels(), cache, FakeMergeClient(set(), malformed=True))
+
+    assert [(r["tokens_in"], r["tokens_out"]) for r in read_jsonl(cache)] == [(5, 3)] * 3
+    assert (stats.tokens_in, stats.tokens_out) == (15, 9)
+
+
+def test_a_warm_rerun_spends_nothing_while_the_cache_still_reports_the_cost(tmp_path):
+    """The two scopes disagree by design, and only one of them survives a rerun.
+
+    `ClusterStats` describes this invocation, so a fully cached run correctly
+    reports zero. The cache rows are what let the run dir still say what the
+    merge path cost -- which is why the manifest names both.
+    """
+    cache = tmp_path / "cache.jsonl"
+    run(three_labels(), cache, FakeMergeClient(set()))
+    before = cache.read_bytes()
+
+    second = FakeMergeClient(set())
+    _, stats = run(three_labels(), cache, second)
+
+    assert second.calls == []
+    assert cache.read_bytes() == before, "a warm rerun rewrote rows instead of appending none"
+    assert (stats.tokens_in, stats.tokens_out) == (0, 0)
+    assert cache_token_totals(cache)["tokens_in"] == 33
+
+
+def test_a_row_written_before_evidence_fields_still_loads(tmp_path):
+    """Older caches keep working, and their absent tokens are counted, not assumed zero."""
+    cache = tmp_path / "cache.jsonl"
+    append_jsonl(
+        cache,
+        {
+            "canon_a": "aaa first",
+            "canon_b": "bbb second",
+            "merge_prompt_sha256": MERGE_SHA,
+            "model_id": MODEL,
+            "equivalent": True,
+        },
+    )
+
+    assert load_cache(cache)[("aaa first", "bbb second", MERGE_SHA, MODEL)] is True
+    assert cache_token_totals(cache) == {
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "rows": 1,
+        "rows_missing": 1,
+    }

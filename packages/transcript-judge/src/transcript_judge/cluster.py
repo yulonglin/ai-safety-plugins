@@ -32,6 +32,15 @@ MERGE_FIELD = "equivalent"
 
 
 class ClusterStats(BaseModel):
+    """Counters for one `cluster_labels` invocation.
+
+    The token sums cover the calls *this* invocation made, so a fully cached
+    rerun reports zero -- correctly, because it spent nothing. They are not the
+    merge cost of the run: that is reconstructed by summing `tokens_in` /
+    `tokens_out` over the append-only pairwise cache, which is the only record
+    that survives a second invocation.
+    """
+
     merge_prompt_sha256: str = ""
     model_id: str = ""
     n_distinct_labels: int = 0
@@ -40,7 +49,20 @@ class ClusterStats(BaseModel):
     n_clusters: int = 0
     contradictory_triads: int = 0
     parse_failures: int = 0
+    tokens_in: int = 0
+    tokens_out: int = 0
     contradictions: list[dict[str, str]] = Field(default_factory=list)
+
+
+class MergeDecision(BaseModel):
+    """One merge-judge call's outcome, before it is written as a cache row."""
+
+    equivalent: bool = False
+    rationale: str = ""
+    quote: str | None = None
+    parse_ok: bool = True
+    tokens_in: int = 0
+    tokens_out: int = 0
 
 
 def canonicalize(label: str) -> str:
@@ -59,12 +81,42 @@ def _pair_key(a: str, b: str) -> tuple[str, str]:
 
 
 def load_cache(path: Path) -> dict[tuple[str, str, str, str], bool]:
+    """Read cached verdicts, keyed on the pair plus the prompt sha and model.
+
+    Only `equivalent` is read, because only the verdict feeds the grouping.
+    Rows written before verdicts carried their evidence therefore still load --
+    they simply cannot be reviewed, which is what `parse_ok`, `rationale` and
+    the token fields exist to prevent going forward.
+    """
     cache: dict[tuple[str, str, str, str], bool] = {}
     for row in read_jsonl(path):
         cache[(row["canon_a"], row["canon_b"], row["merge_prompt_sha256"], row["model_id"])] = bool(
             row["equivalent"]
         )
     return cache
+
+
+def cache_token_totals(path: Path) -> dict[str, int]:
+    """Merge-path tokens across every call ever cached for this run.
+
+    Unlike `ClusterStats`, this survives reruns: a warm invocation issues no
+    calls, so only the rows on disk can say what the merge path cost. Rows
+    predating token accounting contribute 0 and are counted in `rows_missing`
+    rather than silently reducing the total.
+    """
+    tokens_in = tokens_out = rows = missing = 0
+    for row in read_jsonl(path):
+        rows += 1
+        if "tokens_in" not in row:
+            missing += 1
+        tokens_in += int(row.get("tokens_in", 0))
+        tokens_out += int(row.get("tokens_out", 0))
+    return {
+        "tokens_in": tokens_in,
+        "tokens_out": tokens_out,
+        "rows": rows,
+        "rows_missing": missing,
+    }
 
 
 def build_merge_prompt(a: str, b: str) -> str:
@@ -82,22 +134,37 @@ async def _ask_merge_judge(
     model_id: str,
     params: dict[str, Any],
     stats: ClusterStats,
-) -> bool:
+) -> MergeDecision:
+    """Ask whether two labels name one construct, returning the whole finding.
+
+    The rationale and quote come back with the verdict rather than being
+    discarded: this decision is about to be cached, and a cached bool with no
+    evidence is unreviewable forever after.
+    """
     completion = await client.complete(
         system=prompt_text,
         user=build_merge_prompt(a, b),
         model_id=model_id,
         params=params,
     )
+    # Counted before parsing: an unreadable response was still billed.
+    stats.tokens_in += completion.tokens_in
+    stats.tokens_out += completion.tokens_out
+    decision = MergeDecision(tokens_in=completion.tokens_in, tokens_out=completion.tokens_out)
+
     result = parse_response(completion.text)
-    if not hasattr(result, "findings"):
-        stats.parse_failures += 1
-        return False
-    for finding in result.findings:
-        if finding.field == MERGE_FIELD:
-            return bool(finding.value)
+    if hasattr(result, "findings"):
+        for finding in result.findings:
+            if finding.field == MERGE_FIELD:
+                return decision.model_copy(
+                    update={
+                        "equivalent": bool(finding.value),
+                        "rationale": finding.rationale,
+                        "quote": finding.quote,
+                    }
+                )
     stats.parse_failures += 1
-    return False
+    return decision.model_copy(update={"parse_ok": False})
 
 
 def _find_triads(canon: list[str], verdicts: dict[tuple[str, str], bool]) -> list[dict[str, str]]:
@@ -165,7 +232,7 @@ async def cluster_labels(
                 verdicts[key] = cache[cache_key]
                 continue
 
-            equivalent = await _ask_merge_judge(
+            decision = await _ask_merge_judge(
                 a=key[0],
                 b=key[1],
                 client=client,
@@ -174,7 +241,7 @@ async def cluster_labels(
                 params=params,
                 stats=stats,
             )
-            verdicts[key] = equivalent
+            verdicts[key] = decision.equivalent
             append_jsonl(
                 cache_path,
                 PairVerdict(
@@ -182,7 +249,12 @@ async def cluster_labels(
                     canon_b=key[1],
                     merge_prompt_sha256=merge_prompt_sha256,
                     model_id=model_id,
-                    equivalent=equivalent,
+                    equivalent=decision.equivalent,
+                    rationale=decision.rationale,
+                    quote=decision.quote,
+                    parse_ok=decision.parse_ok,
+                    tokens_in=decision.tokens_in,
+                    tokens_out=decision.tokens_out,
                 ).model_dump(),
             )
 

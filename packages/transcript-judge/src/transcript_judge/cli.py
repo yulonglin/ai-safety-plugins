@@ -23,7 +23,7 @@ from cyclopts import App, Parameter
 
 from transcript_judge import __version__
 from transcript_judge.artifact import build_overlap, render_html
-from transcript_judge.cluster import cluster_labels
+from transcript_judge.cluster import cache_token_totals, cluster_labels
 from transcript_judge.labels import derive_labels, verify_spans
 from transcript_judge.loaders import load as load_transcripts
 from transcript_judge.models import LabelRow, TranscriptSample
@@ -382,10 +382,11 @@ def cluster(*, run: str, merge_prompt: str | None = None, model: str | None = No
     except UnsupportedParamError as exc:
         _fail(str(exc), EXIT_PARAMS)
 
+    cache_path = run_paths.clusters_dir / "pairwise_cache.jsonl"
     assignments, stats = anyio.run(
         lambda: cluster_labels(
             labels=_load_labels(run_paths),
-            cache_path=run_paths.clusters_dir / "pairwise_cache.jsonl",
+            cache_path=cache_path,
             merge_prompt_text=spec.prompt_text,
             merge_prompt_sha256=spec.prompt_sha256,
             model_id=spec.model_id,
@@ -410,13 +411,24 @@ def cluster(*, run: str, merge_prompt: str | None = None, model: str | None = No
         "n_clusters": stats.n_clusters,
         "contradictory_triads": stats.contradictory_triads,
         "parse_failures": stats.parse_failures,
+        # Two scopes, named rather than merged: a warm rerun spends nothing, so
+        # the invocation figure goes to zero while the cumulative one -- summed
+        # from the append-only cache rows -- still reports what the run cost.
+        "tokens_this_invocation": {"in": stats.tokens_in, "out": stats.tokens_out},
+        "tokens_cumulative_from_cache": cache_token_totals(cache_path),
     }
     write_json(run_paths.manifest, manifest)
 
+    cumulative = manifest["cluster"]["tokens_cumulative_from_cache"]
     print(f"clusters: {stats.n_clusters} from {stats.n_distinct_labels} distinct labels")
     print(f"pairs: {stats.n_pairs} ({stats.n_pairs_cached} served from cache)")
     print(f"contradictory triads: {stats.contradictory_triads}")
     print(f"merge-judge parse failures: {stats.parse_failures}")
+    print(
+        f"merge tokens: {stats.tokens_in} in / {stats.tokens_out} out this invocation; "
+        f"{cumulative['tokens_in']} in / {cumulative['tokens_out']} out cumulative "
+        f"over {cumulative['rows']} cached pairs"
+    )
     _print_health(manifest)
 
 
