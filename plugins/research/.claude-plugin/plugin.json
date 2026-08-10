@@ -1,7 +1,7 @@
 {
   "name": "research",
   "description": "AI safety research workflows: experiment design, execution, analysis, and literature review.",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "author": {
     "name": "yulong"
   },
@@ -51,6 +51,17 @@
             "type": "command",
             "command": "${CLAUDE_PLUGIN_ROOT}/hooks/research_methodology_reviewer.py",
             "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "${CLAUDE_PLUGIN_ROOT}/hooks/nudge_report_figures.py",
+            "timeout": 5
           }
         ]
       }

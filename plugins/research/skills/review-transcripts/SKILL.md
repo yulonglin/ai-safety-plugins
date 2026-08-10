@@ -101,3 +101,4 @@ Based on findings:
 - Tier 2 uses the transcript-reviewer agent (Read+Grep only, no recursion risk)
 - For Inspect AI evals, recommend `scout scan` for Tier 3 deep LLM-powered scanning
 - The hook `nudge_transcript_review.sh` will remind you to do this after experiment commands
+- This skill is triage — it finds *which* transcripts look wrong. Once you have a hypothesis worth measuring, `/judge-transcripts` classifies the corpus with blinded LLM judges, grounds every positive in a verbatim span, and reports cross-model agreement against its chance null

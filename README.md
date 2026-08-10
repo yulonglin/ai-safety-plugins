@@ -66,7 +66,19 @@ AI safety research workflows.
 
 **Agents:** experiment-designer, research-engineer, data-analyst, literature-scout, research-advisor, research-skeptic
 
-**Skills:** `/spec-interview-research`, `/experiment-setup`, `/run-experiment`, `/api-experiments`, `/read-paper`, `/reproducibility-report`, `/generate-research-spec`, `/mats-slurm`, `/audit-docs`, `/new-experiment`, `/reflect`
+**Skills:** `/spec-interview-research`, `/experiment-setup`, `/run-experiment`, `/api-experiments`, `/read-paper`, `/reproducibility-report`, `/generate-research-spec`, `/mats-slurm`, `/audit-docs`, `/new-experiment`, `/reflect`, `/review-transcripts`, `/judge-transcripts`
+
+| Skill | Purpose |
+|-------|---------|
+| `/review-transcripts` | Triage: deterministic checks then LLM review on sampled transcripts — finds *which* transcripts look wrong |
+| `/judge-transcripts` | Measurement: blinded LLM judges, verbatim-grounded spans, cross-model agreement against its chance null |
+
+**Hooks (informational, never blocking):**
+| Hook | Event | Purpose |
+|------|-------|---------|
+| `nudge_transcript_review` | PostToolUse:Bash | Reminds you to review transcripts after an experiment command |
+| `research_methodology_reviewer` | PostToolUse:Bash/Write/Edit | Flags methodology problems in analysis code |
+| `nudge_report_figures` | Stop | Flags a findings document with no working figure — a referenced image that is absent or zero-byte counts as no figure |
 
 ### writing
 
