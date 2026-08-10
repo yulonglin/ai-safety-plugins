@@ -236,7 +236,18 @@ class ClusterAssignment(BaseModel):
 
 
 class PairVerdict(BaseModel):
-    """One cached merge-judge decision on an unordered pair."""
+    """One cached merge-judge decision on an unordered pair.
+
+    A cached verdict replays forever, so the row has to carry its own evidence:
+    the rationale the judge committed to before deciding, the quote when it
+    offered one, and the tokens the call cost. This row -- not a manifest
+    counter -- is the reconstructable record of what the merge path decided and
+    what it spent, because the counter only ever describes one invocation.
+
+    ``parse_ok`` separates a judged negative from a call whose response could
+    not be read. Both leave ``equivalent`` false; only one of them is a
+    decision, and without the flag a billed failure replays as a verdict.
+    """
 
     canon_a: str
     canon_b: str
@@ -244,6 +255,10 @@ class PairVerdict(BaseModel):
     model_id: str
     equivalent: bool
     rationale: str = ""
+    quote: str | None = None
+    parse_ok: bool = True
+    tokens_in: int = 0
+    tokens_out: int = 0
 
 
 JudgeSpec.model_rebuild()
