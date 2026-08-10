@@ -96,16 +96,23 @@ def load_cache(path: Path) -> dict[tuple[str, str, str, str], bool]:
     return cache
 
 
-def cache_token_totals(path: Path) -> dict[str, int]:
-    """Merge-path tokens across every call ever cached for this run.
+def cache_token_totals(path: Path, *, merge_prompt_sha256: str, model_id: str) -> dict[str, int]:
+    """Merge-path tokens across every call cached for one cell.
 
     Unlike `ClusterStats`, this survives reruns: a warm invocation issues no
-    calls, so only the rows on disk can say what the merge path cost. Rows
-    predating token accounting contribute 0 and are counted in `rows_missing`
-    rather than silently reducing the total.
+    calls, so only the rows on disk can say what the merge path cost.
+
+    The cell is a required argument rather than an optional filter. One cache
+    file holds rows for every prompt sha and model ever run against it, so an
+    unfiltered sum would attribute one cell's spend to another -- the same
+    pooling defect this project reports elsewhere, reintroduced inside the fix
+    for the accounting defect. Rows predating token accounting contribute 0 and
+    are counted in `rows_missing` rather than silently reducing the total.
     """
     tokens_in = tokens_out = rows = missing = 0
     for row in read_jsonl(path):
+        if row["merge_prompt_sha256"] != merge_prompt_sha256 or row["model_id"] != model_id:
+            continue
         rows += 1
         if "tokens_in" not in row:
             missing += 1

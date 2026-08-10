@@ -44,6 +44,56 @@ def _queried_keys(labels: list[LabelRow], *, construct: str, model_id: str | Non
     }
 
 
+def _raw_agreement(
+    labels: list[LabelRow], *, construct: str, model_a: str, model_b: str
+) -> dict[str, int]:
+    """Full agreement over the paired samples, both-negative pairs included.
+
+    The Venn beside this counts positive sets only, so two judges agreeing on
+    every negative render as an empty picture. This is the number that says so,
+    and it is why the panel must not be described as an agreement estimate.
+
+    Scope is the label list the artifact was built from -- the same list the
+    panels use, so the caption cannot describe a different population from the
+    picture above it. Where that list holds several prompt versions of one
+    (model, sample), the cell counts only if those versions agree; a cell whose
+    versions disagree is excluded and reported, never collapsed to whichever row
+    happened to be written last.
+    """
+    by_cell: dict[tuple[str, str], list[LabelRow]] = {}
+    for lab in labels:
+        if lab.label == construct and lab.model_id in (model_a, model_b):
+            by_cell.setdefault((lab.model_id, lab.sample_key), []).append(lab)
+
+    conflicting = {k for k, v in by_cell.items() if len({lab.value for lab in v}) > 1}
+
+    def positive(cell: list[LabelRow]) -> bool:
+        return any(lab.value and lab.evidence_mode == "positive_quote" for lab in cell)
+
+    samples_a = {s for m, s in by_cell if m == model_a}
+    samples_b = {s for m, s in by_cell if m == model_b}
+
+    n_paired = n_agree = n_both_negative = excluded = 0
+    for sample in sorted(samples_a & samples_b):
+        if (model_a, sample) in conflicting or (model_b, sample) in conflicting:
+            excluded += 1
+            continue
+        pa, pb = positive(by_cell[(model_a, sample)]), positive(by_cell[(model_b, sample)])
+        n_paired += 1
+        if pa == pb:
+            n_agree += 1
+            n_both_negative += not pa
+
+    return {
+        "n_paired": n_paired,
+        "n_agree": n_agree,
+        "n_both_negative": n_both_negative,
+        "n_cells_total": len(by_cell),
+        "n_cells_multi_version": sum(1 for v in by_cell.values() if len(v) > 1),
+        "n_excluded_conflicting_versions": excluded,
+    }
+
+
 def build_overlap(
     *,
     labels: list[LabelRow],
@@ -102,6 +152,9 @@ def build_overlap(
                     "model_a": model_a,
                     "model_b": model_b,
                     "n_paired": len(queried),
+                    "raw_agreement": _raw_agreement(
+                        labels, construct=construct, model_a=model_a, model_b=model_b
+                    ),
                     **region(a_keys, b_keys),
                 }
             )
@@ -196,9 +249,13 @@ blockquote {{
 <h1>Transcript judge overlap</h1>
 <p class="sub">run <code>{run_id}</code> · generated {generated}</p>
 {blinding_warning}
-<h2>Reliability</h2>
-<p class="note">One construct, two models. Both sides measure the same thing, so the
-overlap is an agreement estimate. Counts are samples.</p>
+<h2>Positive-label overlap (model vs model)</h2>
+<p class="note">One construct, two models. Counts are samples, and each circle holds only
+the samples that model labelled <em>positive</em>. <strong>Pairs where both models said no
+are not drawn at all</strong> &mdash; two judges that agree on every negative produce an
+empty picture here, so these panels are not an agreement estimate and must not be read as
+one. Full raw agreement, which does count both-negative pairs, is stated under each
+panel.</p>
 <div id="reliability"></div>
 <h2>Exploratory</h2>
 <p class="note"><strong>Exploratory only.</strong> Two different constructs, each the union
@@ -214,7 +271,8 @@ function venn(spec, idx) {{
   const wrap = document.createElement("div");
   wrap.className = "venn";
   const title = spec.kind === "reliability"
-    ? `${{spec.construct}} — ${{spec.model_a}} vs ${{spec.model_b}} (n paired = ${{spec.n_paired}})`
+    ? `${{spec.construct}} — positive-label overlap: ${{spec.model_a}} vs ${{spec.model_b}} `
+      + `(n paired = ${{spec.n_paired}})`
     : `${{spec.label_a}} vs ${{spec.label_b}}`;
   const h = document.createElement("h3");
   h.textContent = title;
@@ -238,6 +296,22 @@ function venn(spec, idx) {{
     <text class="legend" x="130" y="212" text-anchor="middle">${{spec.label_a}}</text>
     <text class="legend" x="330" y="212" text-anchor="middle">${{spec.label_b}}</text>`;
   wrap.appendChild(svg);
+
+  if (spec.kind === "reliability") {{
+    const ra = spec.raw_agreement;
+    const cap = document.createElement("p");
+    cap.className = "note";
+    let text = `Full raw agreement (both-negative pairs included): `
+      + `${{ra.n_agree}}/${{ra.n_paired}}, of which ${{ra.n_both_negative}} `
+      + `both-negative pair(s) are not drawn above.`;
+    if (ra.n_cells_multi_version > 0) {{
+      text += ` ${{ra.n_cells_multi_version}} of ${{ra.n_cells_total}} (model, sample) cell(s)`
+        + ` hold more than one prompt version; ${{ra.n_excluded_conflicting_versions}} excluded`
+        + ` for disagreeing across versions.`;
+    }}
+    cap.textContent = text;
+    wrap.appendChild(cap);
+  }}
 
   const detail = document.createElement("div");
   detail.className = "detail";

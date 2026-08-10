@@ -436,7 +436,7 @@ def test_merge_tokens_are_recorded_per_pair_and_summed_for_the_invocation(tmp_pa
 
     assert [(r["tokens_in"], r["tokens_out"]) for r in read_jsonl(cache)] == [(11, 22)] * 3
     assert (stats.tokens_in, stats.tokens_out) == (33, 66)
-    assert cache_token_totals(cache) == {
+    assert cache_token_totals(cache, merge_prompt_sha256=MERGE_SHA, model_id=MODEL) == {
         "tokens_in": 33,
         "tokens_out": 66,
         "rows": 3,
@@ -469,7 +469,36 @@ def test_a_warm_rerun_spends_nothing_while_the_cache_still_reports_the_cost(tmp_
     assert second.calls == []
     assert cache.read_bytes() == before, "a warm rerun rewrote rows instead of appending none"
     assert (stats.tokens_in, stats.tokens_out) == (0, 0)
-    assert cache_token_totals(cache)["tokens_in"] == 33
+    assert (
+        cache_token_totals(cache, merge_prompt_sha256=MERGE_SHA, model_id=MODEL)["tokens_in"] == 33
+    )
+
+
+def test_another_cells_rows_are_not_charged_to_this_one(tmp_path):
+    """One file, two cells: the totals must split the way the cache key does.
+
+    `load_cache` already keys on the prompt sha and model, so a second model's
+    rows are correctly a cache miss. Summing tokens over the whole file would
+    still hand this cell the other one's spend -- reporting a pooled figure
+    beside `merge_prompt_sha256` and `model_id`, which name one cell.
+    """
+    cache = tmp_path / "cache.jsonl"
+    run(three_labels(), cache, FakeMergeClient(set()))
+    run(three_labels(), cache, FakeMergeClient(set()), model_id="openai/gpt-5.6-sol")
+
+    assert len(list(read_jsonl(cache))) == 6, "expected both cells' rows in the one file"
+    assert cache_token_totals(cache, merge_prompt_sha256=MERGE_SHA, model_id=MODEL) == {
+        "tokens_in": 33,
+        "tokens_out": 66,
+        "rows": 3,
+        "rows_missing": 0,
+    }
+    assert cache_token_totals(cache, merge_prompt_sha256="d" * 64, model_id=MODEL) == {
+        "tokens_in": 0,
+        "tokens_out": 0,
+        "rows": 0,
+        "rows_missing": 0,
+    }
 
 
 def test_a_row_written_before_evidence_fields_still_loads(tmp_path):
@@ -487,7 +516,7 @@ def test_a_row_written_before_evidence_fields_still_loads(tmp_path):
     )
 
     assert load_cache(cache)[("aaa first", "bbb second", MERGE_SHA, MODEL)] is True
-    assert cache_token_totals(cache) == {
+    assert cache_token_totals(cache, merge_prompt_sha256=MERGE_SHA, model_id=MODEL) == {
         "tokens_in": 0,
         "tokens_out": 0,
         "rows": 1,
