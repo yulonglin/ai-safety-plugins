@@ -11,6 +11,8 @@ description: Fix all merge conflicts on the current Git branch non-interactively
 - Prefer minimal, correct changes that preserve both sides' intent when possible.
 - Use non-interactive flags for any tools you invoke.
 - Do not push or tag; only commit locally.
+- Never run `git merge --abort` (or any other discard of the in-progress merge) to sidestep a hard conflict — resolve it, or stop and report exactly which file/hunk is blocking and why.
+- Do not invent new behavior to make a conflict disappear. Every resolution must be traceable to what one side (or a real merge of both) already intended — never a third thing neither side wrote.
 
 ## High-level Plan
 1. **Detect conflicts**
@@ -19,7 +21,8 @@ description: Fix all merge conflicts on the current Git branch non-interactively
 
 2. **Resolve conflicts per file**
    - Open each conflicting file and remove conflict markers.
-   - Merge both sides logically when feasible. If mutually exclusive, pick the variant that:
+   - **Recover intent first.** For each conflicting hunk, read the commit messages on both sides (`git log --oneline <side>`), and any linked PR/issue description or comment, before choosing a resolution. The side whose intent the change actually serves should win — compiling and passing tests is necessary but not sufficient; a resolution can build green and still contradict what either side was trying to do.
+   - Merge both sides logically when feasible. If mutually exclusive and intent is genuinely unrecoverable (no commit message, PR, or issue clarifies it), fall back to picking the variant that:
      - Compiles and passes type checks, and
      - Preserves existing public APIs and behavior.
    - **Language-aware strategy:**
